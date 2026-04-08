@@ -1,67 +1,136 @@
-import { ArrowRight } from "lucide-react"
+import { ExternalLink } from "lucide-react";
 
 const projects = [
+  {
+    title: "HealthcareX24",
+    type: "App + Website",
+    description:
+      "Comprehensive enterprise healthcare platform for patient management, instant doctor consultations, and medical records.",
+    image: "/images/healthcare_x24_generated.png",
+    fallbackImage: "/images/healthcare_x24_generated.png",
+    liveUrl: "https://healthcarex24.com",
+    tags: ["React", "Node.js", "MongoDB", "WebRTC"],
+    accentClass: "border-emerald-400/40",
+    rotation: -3,
+    chipClass:
+      "border-emerald-400/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20",
+  },
+  {
+    title: "Katalyx HR ERP",
+    type: "Website",
+    description:
+      "Enterprise resource planning system tailored for HR operations, payroll processing, and employee lifecycle management.",
+    image: "/images/katalyx_hr_erp_generated.png",
+    fallbackImage: "/images/katalyx_hr_erp_generated.png",
+    liveUrl: "https://katalyxhrerp.online",
+    tags: ["React", "Express", "MongoDB", "Redux"],
+    accentClass: "border-blue-400/40",
+    rotation: 2,
+    chipClass:
+      "border-blue-400/30 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20",
+  },
+  {
+    title: "AbhiRoom",
+    type: "App + Website",
+    description:
+      "Smart property management and room booking application handling dynamic pricing, verified listings, and seamless user booking experience.",
+    image: "/images/abhiroom_booking_generated.png",
+    fallbackImage: "/images/abhiroom_booking_generated.png",
+    liveUrl: "https://abhiroom.in",
+    tags: ["Next.js", "Node.js", "PostgreSQL", "Stripe"],
+    accentClass: "border-rose-400/40",
+    rotation: 4,
+    chipClass:
+      "border-rose-400/30 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20",
+  },
+  {
+    title: "Inventory Management System",
+    type: "App",
+    description:
+      "An inventory operations app for tracking stock, updates, and day-to-day workflow management.",
+    image: "/images/inventory_management_generated.png",
+    fallbackImage: "/images/inventory_management_generated.png",
+    liveUrl: null,
+    tags: ["React Expo", "Node.js", "MongoDB", "Express"],
+    accentClass: "border-white/20",
+    rotation: -2,
+    chipClass: "border-white/20 bg-white/5 text-gray-200 hover:bg-white/10",
+  },
 ];
 
 export const ProjectSection = () => {
-    return(
-        <section id="projects" className="py-24 px-4 relative">
-            <div className="container mx-auto max-w-5xl">
-                <h2 className="text-3xl md:text-4xl font-bold md-4 text-center"> Featured <span className="text-primary"> Projects </span>
-                </h2>
+  return (
+    <section id="projects" className="bg-black py-16 sm:py-20 md:py-24 text-white">
+      <div className="px-4 sm:px-6 md:px-12 lg:px-16">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="mb-3 sm:mb-4 text-center text-2xl sm:text-3xl font-normal md:text-5xl">
+            Featured Projects
+          </h2>
 
-                <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-                    Here are some of my recent projects. Each project was caefully
-                    crafted with attention to detail, performance, and user experience.
-                </p>
+          <p className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300">
+            Selected work across web and mobile products.
+          </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {projects.map((project,key) => (
-                        <div
-                        key={key}
-                        className="group bg-card rounded-lg overflow-hidden shadow-xs card-hover"
+          <div className="projects-grid grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:gap-8">
+            {projects.map((project) => {
+              const ctaHref = project.liveUrl ?? "#contact";
+              const ctaLabel = project.liveUrl ? "View Project" : "Request Demo";
+
+              return (
+                <article
+                  key={project.title}
+                  style={{ "--card-rotate": `${project.rotation}deg` }}
+                  className={`project-glass-card overflow-hidden rounded-2xl border ${project.accentClass}`}
+                >
+                  <div
+                    data-text={project.type}
+                    className="project-card-media relative h-40 sm:h-48 md:h-56 lg:h-60 overflow-hidden"
+                  >
+                    <img
+                      src={project.image}
+                      alt={`${project.title} preview`}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                      onError={(event) => {
+                        event.currentTarget.src = project.fallbackImage;
+                      }}
+                    />
+                  </div>
+
+                  <div className="p-4 sm:p-5">
+                    <h3 className="mb-2 text-lg sm:text-xl md:text-2xl font-medium break-words">
+                      {project.title}
+                    </h3>
+                    <p className="mb-4 text-xs sm:text-sm text-gray-300 line-clamp-2">
+                      {project.description}
+                    </p>
+
+                    <div className="mb-4 sm:mb-5 flex flex-wrap gap-2">
+                      {project.tags.slice(0, 3).map((tag) => (
+                        <span
+                          key={tag}
+                          className={`rounded-md border px-2 sm:px-2.5 py-1 text-xs font-medium transition-colors duration-200 ${project.chipClass}`}
                         >
-                            <div className="h-48 overflow-hidden">
-                                <img src={project.image}alt={project.title} className="w-full h-full object-cover trainsition-transform duration-500 group-hover:scale-110"/>
-                            </div>
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
 
-                            <div className="p-6">
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                    {project.tags.map((tag) =>(
-                                        <span
-                                        className="px-2 py-1 text-xs font-medium border rounded-full bg-primary/20 text-secondary-foreground"
-                                        >{tag}</span>
-                                    ))}
-                                </div>
-                            
-
-                            <h3 className="text-xl font-semibold mb-1">{project.title}</h3>
-                            <p className="text-muted-foreground text-sm mb-4">{project.description}</p>
-                            <div className="flex justify-between items-center">
-                                <div className="flex spacex-3">
-                                    <a href={project.demoUrl}
-                                    target="_blank"
-                                    className="text-foreground/80 hover:text-primary transition-colors duration-300">
-                                        <ExternalLink size={20}/>
-                                    </a>
-                                    <a href={project.githubUrl} 
-                                    target="_blank"
-                                    className="text-foreground/80 hover:text-primary transition-colors duration-300">
-                                        <Github size={20} />
-                                    </a>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="text-center mt-12">
-                    <a className="cosmic-button w-fit flex item-center mx-auto gap-2" href="https://github.com/student-yashguptya?tab=repositories">
-                        Check My Github <ArrowRight size={16}/>
+                    <a
+                      href={ctaHref}
+                      target={project.liveUrl ? "_blank" : undefined}
+                      rel={project.liveUrl ? "noreferrer" : undefined}
+                      className="inline-flex items-center gap-2 rounded-lg bg-white px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-black transition-colors duration-300 hover:bg-gray-100"
+                    >
+                      {ctaLabel} <ExternalLink size={16} />
                     </a>
-                </div>
-            </div>
-        </section>
-    );
-}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};

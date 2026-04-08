@@ -1,16 +1,19 @@
+import { Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Home } from "./assets/Pages/Home";
-import { NotFound } from "./assets/pages/NotFound";
 
+const Home = lazy(() => import("./assets/Pages/Home").then(module => ({ default: module.Home })));
+const NotFound = lazy(() => import("./assets/Pages/NotFound").then(module => ({ default: module.NotFound })));
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <Route index element={<Home />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<div className="flex h-screen w-full items-center justify-center bg-black text-white">Loading...</div>}>
+          <Routes>
+            <Route index element={<Home />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </>
   );

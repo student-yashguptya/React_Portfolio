@@ -1,146 +1,243 @@
+import { useState, useRef } from "react";
+import emailjs from "@emailjs/browser";
 import {
   Instagram,
   Linkedin,
   Mail,
   MapPin,
   Phone,
-  Send
+  Send,
+  Github,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 
+const contactItems = [
+  {
+    icon: Mail,
+    label: "Email",
+    value: "gyash6328@gmail.com",
+    href: "mailto:gyash6328@gmail.com",
+  },
+  {
+    icon: Phone,
+    label: "Phone",
+    value: "+91 9520102418",
+    href: "tel:+919520102418",
+  },
+  {
+    icon: MapPin,
+    label: "Location",
+    value: "A-138 Suresh Sharma Nagar Pilibhit Bypass road, Bareilly",
+    href: null,
+  },
+];
 
 export const ContactSection = () => {
-  
+  const form = useRef();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    // Requires environment variables. Fallback placeholders show the needed setup in Vercel.
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || "YOUR_SERVICE_ID";
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || "YOUR_TEMPLATE_ID";
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY";
+
+    emailjs
+      .sendForm(serviceId, templateId, form.current, {
+        publicKey: publicKey,
+      })
+      .then(
+        () => {
+          setIsSubmitting(false);
+          setSubmitStatus("success");
+          form.current.reset();
+          setTimeout(() => setSubmitStatus(null), 5000);
+        },
+        (error) => {
+          console.error("EmailJS Error:", error);
+          setIsSubmitting(false);
+          setSubmitStatus("error");
+        }
+      );
+  };
+
   return (
-    <section id="contact" className="py-24 px-4 relative bg-secondary/30">
-      <div className="container mx-auto max-w-5xl">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
-          Get In <span className="text-primary">Touch</span>
-        </h2>
+    <section id="contact" className="bg-black py-16 sm:py-20 md:py-24 text-white">
+      <div className="px-4 sm:px-6 md:px-12 lg:px-16">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="mb-3 sm:mb-4 text-center text-2xl sm:text-3xl font-normal md:text-5xl">
+            Get In Touch
+          </h2>
 
-        <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-          Have a project in mind or want to collaborate? Feel free to reach out.
-          I'm always open to discussing new opportunities.
-        </p>
+          <p className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300">
+            Have a project in mind or want to collaborate? Let&apos;s connect.
+          </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-  <div className="space-y-8">
-    <h3 className="text-2xl font-semibold mb-6">
-      Contact Information
-    </h3>
+          <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2">
+            <div className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-6 md:p-8">
+              <h3 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-medium">
+                Contact Information
+              </h3>
 
-    <div className="space-y-6 justify-center">
-      <div className="flex items-start space-x-4">
-        <div className="p-3 rounded-full bg-primary/10">
-          <Mail className="h-6 w-6 text-primary" />
-        </div>
-        <div>
-          <p className="text-base font-medium">Email</p>
-          <a
-            href="mailto:gyash6328@example.com"
-            className="text-muted-foreground hover:underline"
-          >
-            gyash6328@example.com
-          </a>
-        </div>
-      </div> 
-       <div className="flex items-start space-x-4">
-        <div className="p-3 rounded-full bg-primary/10">
-          <Phone className="h-6 w-6 text-primary" />
-        </div>
-        <div>
-          <p className="text-base font-medium">Phone</p>
-          <a
-            href="tel:919520102418"
-            className="text-muted-foreground hover:underline"
-          >
-            (+91) 9520102418
-          </a>
-        </div>
-      </div>
-       <div className="flex items-start space-x-4">
-        <div className="p-3 rounded-full bg-primary/10">
-          <MapPin className="h-6 w-6 text-primary" />
-        </div>
-        <div>
-          <p className="text-base font-medium">Location</p>
-          <a
-            className="text-muted-foreground hover:underline"
-          >
-            Bareilly, Uttar Pradesh, India
-          </a>
-        </div>
-      </div>
-    </div>
-    <div className="pt-8">
-  <h4 className="font-medium mb-4">Connect With Me</h4>
-  <div className="flex space-x-4 justify-center">
-    <a href="https://www.linkedin.com/in/yash-gupta-4178062a8/" target="_blank" rel="noopener noreferrer">
-      <Linkedin />
-    </a>
-    
-    <a href="https://www.instagram.com/yash.gupta6/?next=%2F&hl=en" target="_blank" rel="noopener noreferrer">
-      <Instagram />
-    </a>
-  </div>
-  </div>
-  </div>
-  <div className="bg-card p-8 rounded-lg shadow-xs">
-  <h3 className="text-2xl font-semibold mb-6">Send a Message</h3>
-  <form className="space-y-6">
-    <div>
-      <label htmlFor="name" className='block text-sm font-medium mb-2'>
-        Your Name
-      </label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
-        placeholder="Enter your name"
-        required
-      />
-    </div>
-    <div>
-      <label htmlFor="email" className='block text-sm font-medium mb-2'>
-        Your Email
-      </label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary"
-        placeholder="Enter your Email"
-        required
-      />
-    </div>
-    <div>
-      <label htmlFor="message" className='block text-sm font-medium mb-2'>
-        Your Message
-      </label>
-      <textarea
-        id="message"
-        name="message"
-        className="w-full px-4 py-3 rounded-md border border-input bg-background focus:outline-hidden focus:ring-2 focus:ring-primary resize-none"
-        placeholder="Enter your massage"
-        required
-      />
-    </div>
-   <button
-                type="submit"
-                
-                className={cn(
-                  "cosmic-button w-full flex items-center justify-center gap-2"
+              <div className="space-y-4 sm:space-y-5">
+                {contactItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={item.label} className="flex items-start gap-3 sm:gap-4">
+                      <div className="rounded-lg border border-white/20 p-2 flex-shrink-0">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs sm:text-sm text-gray-300">
+                          {item.label}
+                        </p>
+                        {item.href ? (
+                          <a
+                            href={item.href}
+                            className="text-sm sm:text-base font-medium break-all transition-colors duration-300 hover:text-gray-300"
+                          >
+                            {item.value}
+                          </a>
+                        ) : (
+                          <p className="text-sm sm:text-base font-medium break-all">
+                            {item.value}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="mt-6 sm:mt-8">
+                <h4 className="mb-3 text-xs sm:text-sm text-gray-300">
+                  Connect With Me
+                </h4>
+                <div className="flex gap-2 sm:gap-3 flex-wrap">
+                  <a
+                    href="https://www.linkedin.com/in/yash-gupta-4178062a8/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-lg border border-white/20 p-2 transition-colors duration-300 hover:bg-white hover:text-black"
+                    title="Visit LinkedIn profile"
+                    aria-label="LinkedIn"
+                  >
+                    <Linkedin size={18} />
+                  </a>
+                  <a
+                    href="https://github.com/yashgupta6"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-lg border border-white/20 p-2 transition-colors duration-300 hover:bg-white hover:text-black"
+                    title="Visit GitHub profile"
+                    aria-label="GitHub"
+                  >
+                    <Github size={18} />
+                  </a>
+                  <a
+                    href="https://www.instagram.com/yash.gupta6/?next=%2F&hl=en"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-lg border border-white/20 p-2 transition-colors duration-300 hover:bg-white hover:text-black"
+                    title="Visit Instagram profile"
+                    aria-label="Instagram"
+                  >
+                    <Instagram size={18} />
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-6 md:p-8">
+              <h3 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-medium">
+                Send a Message
+              </h3>
+              <form ref={form} onSubmit={sendEmail} className="space-y-4 sm:space-y-5">
+                {submitStatus === "success" && (
+                  <div className="rounded-lg bg-green-500/10 border border-green-500/20 p-3 text-green-400 text-sm">
+                    Message sent successfully! I will get back to you soon.
+                  </div>
                 )}
-              >
-                <Send size={16} />
-              </button>
+                {submitStatus === "error" && (
+                  <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-red-400 text-sm">
+                    Failed to send message. Please try again later or email me directly.
+                  </div>
+                )}
+                <div>
+                  <label
+                    htmlFor="user_name"
+                    className="mb-2 block text-xs sm:text-sm text-gray-300"
+                  >
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    id="user_name"
+                    name="user_name"
+                    placeholder="Enter your name"
+                    className="w-full rounded-lg border border-white/20 bg-black/40 px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base text-white placeholder:text-gray-400 focus:border-white/50 focus:outline-none transition-colors duration-300"
+                    required
+                  />
+                </div>
 
-  </form>
-</div>
+                <div>
+                  <label
+                    htmlFor="user_email"
+                    className="mb-2 block text-xs sm:text-sm text-gray-300"
+                  >
+                    Your Email
+                  </label>
+                  <input
+                    type="email"
+                    id="user_email"
+                    name="user_email"
+                    placeholder="Enter your email"
+                    className="w-full rounded-lg border border-white/20 bg-black/40 px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base text-white placeholder:text-gray-400 focus:border-white/50 focus:outline-none transition-colors duration-300"
+                    required
+                  />
+                </div>
 
-</div>
-</div>
+                <div>
+                  <label
+                    htmlFor="message"
+                    className="mb-2 block text-xs sm:text-sm text-gray-300"
+                  >
+                    Your Message
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={4}
+                    placeholder="Enter your message"
+                    className="w-full resize-none rounded-lg border border-white/20 bg-black/40 px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base text-white placeholder:text-gray-400 focus:border-white/50 focus:outline-none transition-colors duration-300"
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`inline-flex w-full items-center justify-center gap-2 rounded-lg bg-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-black transition-colors duration-300 ${
+                    isSubmitting ? "opacity-70 cursor-not-allowed" : "hover:bg-gray-100"
+                  }`}
+                >
+                  {isSubmitting ? (
+                    "Sending..."
+                  ) : (
+                    <>
+                      Send Message <Send size={16} />
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 };

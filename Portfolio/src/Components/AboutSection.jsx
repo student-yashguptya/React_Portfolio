@@ -1,79 +1,97 @@
-import {Briefcase, Code, User} from "lucide-react"
+import { Briefcase, Code, User } from "lucide-react";
+
+const highlights = [
+  {
+    icon: Code,
+    title: "Web & App Development",
+    description:
+      "Building responsive websites and Android applications with clean UI and robust backend systems.",
+  },
+  {
+    icon: User,
+    title: "UI/UX Design",
+    description:
+      "Designing intuitive, modern interfaces for web and mobile with a focus on usability and clarity.",
+  },
+  {
+    icon: Briefcase,
+    title: "Project Management",
+    description:
+      "Managing end-to-end delivery with agile workflows, clear communication, and quality execution.",
+  },
+];
 
 export const AboutSection = () => {
-    return(
-        <section id="about" className="py-24 px-4 relative">
-            {" "}
-            <div className="container mx-auto max-w-5xl">
-                <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-                    About <span className="text-primary"> Me </span>
-                </h2>
+  return (
+    <section id="about" className="bg-black py-16 sm:py-20 md:py-24 text-white">
+      <div className="px-4 sm:px-6 md:px-12 lg:px-16">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="mb-8 sm:mb-10 md:mb-12 text-center text-2xl sm:text-3xl font-normal md:text-5xl">
+            About Me
+          </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                     <div className="space-y-6">
-                        <h3 className="text-2xl font-semibold">
-                            I’m a passionate developer crafting responsive web and Android apps.
-                        </h3>
+          <div className="grid grid-cols-1 items-start gap-6 sm:gap-8 md:gap-10 lg:grid-cols-2">
+            <div className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-6 md:p-8">
+              <h3 className="mb-4 text-xl sm:text-2xl font-medium">
+                I&apos;m a developer crafting web and mobile products with
+                intention.
+              </h3>
+              <p className="mb-4 text-sm sm:text-base text-gray-300">
+                I specialize in building responsive, accessible, and
+                high-performance applications using modern technologies and
+                clean system design.
+              </p>
+              <p className="mb-6 sm:mb-8 text-sm sm:text-base text-gray-300">
+                I care deeply about thoughtful user experience, strong
+                engineering fundamentals, and delivering outcomes that scale.
+              </p>
 
-                        <p className="text-muted-foreground"> 
-                            I specialize in building responsive, accessible, and high-performance web and Android applications using modern technologies and best practices with clean UI and efficient back-end systems
-                        </p>
-                        <p className="text-muted-foreground"> 
-                            I'm passionate about creating elegant solutions to complex problems, and I'm constantly learning new technologies and techniques to stay at the forefront of the ever-evolving web landscape. 
-                        </p>
-
-                        <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center">
-                            <a href="#contact" className="cosmic-button">
-                                Get In Touch
-                            </a>
-
-                            <a href="/Documents/Resume.pdf"
-                            download="Yash_Resume.pdf" target="_blank"
-                            className="px-6 py-2 rounded-full border-primary text-primary hover:bg-primary/10 transition-colors duration-300">
-                                Download Resume
-                            </a>
-                        </div>
-                    </div> 
-
-                    <div className="grid grid-cols-1 gap-6">
-                        <div className="gradient-border p-6 card-hover">
-                            <div className="flex items-start gap-4">
-                                <div className="p-3 rounded-full bg-primary/10">
-                                  <Code className="h-6 w-6 text-primary"/>
-                                </div>
-                                 <div className="text-left">
-                                    <h4 className="font-semibold text-lg">Web & App Development</h4>
-                                    <p className="text-muted-foreground">Building responsive websites and Android applications with clean UI and robust backend systems, using modern frameworks and tools to deliver seamless digital experiences.</p>
-                                 </div>
-                            </div>
-                        </div>
-                        <div className="gradient-border p-6 card-hover">
-                             <div className="flex items-start gap-4">
-                                <div className="p-3 rounded-full bg-primary/10">
-                                  <User className="h-6 w-6 text-primary"/>
-                                </div>
-                                <div className="text-left">
-                                    <h4 className="font-semibold text-lg">UI/UX Design</h4>
-                                    <p className="text-muted-foreground">Designing intuitive interfaces and seamless user experiences for web and mobile apps, focusing on usability, responsiveness, and modern aesthetics.</p>
-                                 </div>
-                            </div>
-                        </div>
-                        <div className="gradient-border p-6 card-hover">
-                             <div className="flex items-start gap-4">
-                                <div className="p-3 rounded-full bg-primary/10">
-                                  <Briefcase className="h-6 w-6 text-primary"/>
-                                </div>
-                                <div className="text-left">
-                                    <h4 className="font-semibold text-lg">Project Management</h4>
-                                    <p className="text-muted-foreground">Managing end-to-end delivery of web and app projects using agile methodologies, ensuring timely execution, collaboration, and quality outcomes.</p>
-                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
+                <a
+                  href="#contact"
+                  className="rounded-lg bg-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-black transition-colors duration-300 hover:bg-gray-100 text-center"
+                >
+                  Start a Chat
+                </a>
+                <a
+                  href="/Documents/Resume.pdf"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="liquid-glass rounded-lg border border-white/20 px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-white transition-colors duration-300 hover:bg-white hover:text-black text-center"
+                >
+                  Download Resume
+                </a>
+              </div>
             </div>
-        </section>
-    );
-}
 
-
+            <div className="grid gap-4">
+              {highlights.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={item.title}
+                    className="liquid-glass rounded-xl border border-white/20 p-4 sm:p-5 transition-all duration-300 hover:border-white/30 hover:bg-white/5"
+                  >
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className="rounded-lg border border-white/20 p-2 flex-shrink-0">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="mb-1 text-base sm:text-lg font-medium">
+                          {item.title}
+                        </h4>
+                        <p className="text-sm text-gray-300">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};

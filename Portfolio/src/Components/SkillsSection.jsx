@@ -1,92 +1,116 @@
-import { useState } from "react";
-import {cn} from "@/lib/utils"
+import {
+  Atom,
+  Braces,
+  Code2,
+  Database,
+  FileCode2,
+  Figma,
+  GitBranch,
+  Github,
+  Globe,
+  Layers,
+  MonitorSmartphone,
+  Server,
+  Smartphone,
+  Terminal,
+  Coffee,
+  Box,
+} from "lucide-react";
 
 const skills = [
   // Frontend
-  { name: "HTML/CSS", level: 90, category: "frontend" },
-  { name: "JavaScript", level: 80, category: "frontend" },
-  { name: "React.js", level: 80, category: "frontend" },
-  { name: "React Native", level: 80, category: "frontend" },
-  { name: "Flutter", level: 90, category: "frontend" },
-  { name: "TypeScript", level: 80, category: "frontend" },
-  { name: "Tailwind CSS", level: 70, category: "frontend" },
-  { name: "Next.js", level: 50, category: "frontend" },
-
+  { name: "HTML/CSS", category: "frontend" },
+  { name: "JavaScript", category: "frontend" },
+  { name: "React.js", category: "frontend" },
+  { name: "React Native", category: "frontend" },
+  { name: "Flutter", category: "frontend" },
   // Backend
-  { name: "Node.js", level: 50, category: "backend" },
-
+  { name: "Node.js", category: "backend" },
   // Database
-  { name: "MongoDB", level: 70, category: "database" },
-  { name: "SQL", level: 70, category: "database" },
-
+  { name: "MongoDB", category: "database" },
+  { name: "SQL", category: "database" },
   // Tools & Platforms
-  { name: "Git", level: 90, category: "tools" },
-  { name: "GitHub", level: 90, category: "tools" },
-  { name: "Figma", level: 85, category: "tools" },
-  { name: "VS Code", level: 95, category: "tools" },
-  { name: "Android Studio", level: 95, category: "tools" },
-
+  { name: "Git", category: "tools" },
+  { name: "GitHub", category: "tools" },
+  { name: "Android Studio", category: "tools" },
+  { name: "Blender", category: "tools" },
   // Languages
-  { name: "Dart", level: 90, category: "language" },
-  { name: "C", level: 70, category: "language" },
-  { name: "Java", level: 70, category: "language" },
-  { name: "Python", level: 70, category: "language" },
-  
+  { name: "Dart", category: "language" },
+  { name: "C", category: "language" },
+  { name: "Java", category: "language" },
 ];
 
-const categories = ["all" , "frontend" , "backend" , "database" , "tools" , "language"];
+const categoryColors = {
+  frontend: "142, 249, 252",
+  backend: "142, 252, 204",
+  database: "142, 202, 252",
+  tools: "204, 142, 252",
+  language: "252, 208, 142",
+};
+
+const skillIcons = {
+  "HTML/CSS": Globe,
+  JavaScript: FileCode2,
+  "React.js": Atom,
+  "React Native": Smartphone,
+  Flutter: Layers,
+  "Node.js": Server,
+  MongoDB: Database,
+  SQL: Database,
+  Git: GitBranch,
+  GitHub: Github,
+  "Android Studio": Smartphone,
+  Blender: Box,
+  Dart: Braces,
+  C: Terminal,
+  Java: Coffee,
+};
+
+const fallbackColor = "142, 202, 252";
+const FallbackIcon = Code2;
 
 export const SkillsSection = () => {
-    const [activeCategory,setActiveCaterory] = useState("all");
+  return (
+    <section id="skills" className="bg-black py-16 sm:py-20 md:py-24 text-white">
+      <div className="px-4 sm:px-6 md:px-12 lg:px-16">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="mb-3 sm:mb-4 text-center text-2xl sm:text-3xl font-normal md:text-5xl">
+            Technical Skills
+          </h2>
 
-    const filteredSkills = skills.filter((skill) => activeCategory === "all" || skill.category === activeCategory);
-    return(
-        <section
-        id="skills"
-        className="py-24 px-4-relative bg-secondary/30"
-        >
-            <div className="container mx-auto max-w-5xl">
-                <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-                    My <span className="text-primary"> Skills </span>
-                </h2>
+          <p className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300">
+            Proficient across frontend, backend, databases, tools, and multiple
+            programming languages.
+          </p>
 
-                <div className="flex flex-wrap justify-center gap-4 mb-12">
-                    {categories.map((category,key) =>(
-                        <button key={key} 
-                        className={cn("px-5 py-2 rounded-full transition-colors duration-300 capitalize",
-                            activeCategory === category ? "bg-primary text-primary-foreground" 
-                            : "bg-secondary/70 text-foregroung hover:bd-secondary"
-                        )}
-                        onClick={() => setActiveCaterory(category)}
-                        >
-                            {category}
-                        </button>
-                    ))}
-                </div>
+          <div className="skills-rotator">
+            <div className="wrapper">
+              <div className="inner" style={{ "--quantity": skills.length }}>
+                {skills.map((skill, index) => {
+                  const SkillIcon = skillIcons[skill.name] ?? FallbackIcon;
+                  const color = categoryColors[skill.category] ?? fallbackColor;
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredSkills.map((skill , key) =>(
-                        <div
-                        key={key}
-                        className="bg-card p-6 rounded-lg shadow-xs card-hover"
-                        >
-                            <div className="text-left mb-4">
-                                <h3 className="font-semibold text-lg">{skill.name}</h3>
-                            </div>
-                            <div className="w-full bg-secondary/50 h-2 rounded-full overflow-hidden">
-                                <div className="bg-primary h-2 rounded-full origin-left animate-[grow_1.5s_ease-out"
-                                style={{width: skill.level + "%"}}
-                                />
-                            </div>
-
-                            <div className="text-right mt-1">
-                                <span
-                                className="text-muted-foreground">{skill.level}%</span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                  return (
+                    <div
+                      key={`${skill.name}-${skill.category}`}
+                      className="card"
+                      style={{
+                        "--index": index,
+                        "--color-card": color,
+                      }}
+                    >
+                      <div className="img">
+                        <SkillIcon size={30} strokeWidth={1.8} />
+                        <span>{skill.name}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-        </section>
-    );
-}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
