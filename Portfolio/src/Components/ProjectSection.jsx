@@ -1,4 +1,22 @@
 import { ExternalLink } from "lucide-react";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
 
 const projects = [
   {
@@ -62,14 +80,20 @@ export const ProjectSection = () => {
   return (
     <section id="projects" className="bg-black py-16 sm:py-20 md:py-24 text-white">
       <div className="px-4 sm:px-6 md:px-12 lg:px-16">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="mb-3 sm:mb-4 text-center text-2xl sm:text-3xl font-normal md:text-5xl">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.1 }}
+          className="mx-auto max-w-6xl"
+        >
+          <motion.h2 variants={itemVariants} className="mb-3 sm:mb-4 text-center text-2xl sm:text-3xl font-normal md:text-5xl">
             Featured Projects
-          </h2>
+          </motion.h2>
 
-          <p className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300">
+          <motion.p variants={itemVariants} className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300">
             Selected work across web and mobile products.
-          </p>
+          </motion.p>
 
           <div className="projects-grid grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:gap-8">
             {projects.map((project) => {
@@ -77,7 +101,8 @@ export const ProjectSection = () => {
               const ctaLabel = project.liveUrl ? "View Project" : "Request Demo";
 
               return (
-                <article
+                <motion.article
+                  variants={itemVariants}
                   key={project.title}
                   style={{ "--card-rotate": `${project.rotation}deg` }}
                   className={`project-glass-card overflow-hidden rounded-2xl border ${project.accentClass}`}
@@ -125,11 +150,11 @@ export const ProjectSection = () => {
                       {ctaLabel} <ExternalLink size={16} />
                     </a>
                   </div>
-                </article>
+                </motion.article>
               );
             })}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

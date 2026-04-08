@@ -7,10 +7,11 @@ import { SkillsSection } from "../../Components/SkillsSection";
 import { CertificationsSection } from "../../Components/CertificationsSection";
 import { ProjectSection } from "../../Components/ProjectSection";
 import { ContactSection } from "../../Components/ContactSection";
+import { Footer } from "../../Components/Footer";
 
 export const Home = () => {
   return (
-    <div className="bg-black text-white font-sans">
+    <div className="bg-black text-white font-sans overflow-x-hidden">
       <HeroSection />
       <AboutSection />
       <EducationSection />
@@ -20,6 +21,7 @@ export const Home = () => {
       <CertificationsSection />
       <ProjectSection />
       <ContactSection />
+      <Footer />
     </div>
   );
 };

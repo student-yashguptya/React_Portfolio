@@ -1,4 +1,22 @@
 import { Briefcase, Code, User } from "lucide-react";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
 
 const highlights = [
   {
@@ -25,13 +43,19 @@ export const AboutSection = () => {
   return (
     <section id="about" className="bg-black py-16 sm:py-20 md:py-24 text-white">
       <div className="px-4 sm:px-6 md:px-12 lg:px-16">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="mb-8 sm:mb-10 md:mb-12 text-center text-2xl sm:text-3xl font-normal md:text-5xl">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          className="mx-auto max-w-6xl"
+        >
+          <motion.h2 variants={itemVariants} className="mb-8 sm:mb-10 md:mb-12 text-center text-2xl sm:text-3xl font-normal md:text-5xl">
             About Me
-          </h2>
+          </motion.h2>
 
           <div className="grid grid-cols-1 items-start gap-6 sm:gap-8 md:gap-10 lg:grid-cols-2">
-            <div className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-6 md:p-8">
+            <motion.div variants={itemVariants} className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-6 md:p-8">
               <h3 className="mb-4 text-xl sm:text-2xl font-medium">
                 I&apos;m a developer crafting web and mobile products with
                 intention.
@@ -62,13 +86,14 @@ export const AboutSection = () => {
                   Download Resume
                 </a>
               </div>
-            </div>
+            </motion.div>
 
             <div className="grid gap-4">
               {highlights.map((item) => {
                 const Icon = item.icon;
                 return (
-                  <div
+                  <motion.div
+                    variants={itemVariants}
                     key={item.title}
                     className="liquid-glass rounded-xl border border-white/20 p-4 sm:p-5 transition-all duration-300 hover:border-white/30 hover:bg-white/5"
                   >
@@ -85,12 +110,12 @@ export const AboutSection = () => {
                         </p>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
