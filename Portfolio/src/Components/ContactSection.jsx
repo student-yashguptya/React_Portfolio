@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import styled from "styled-components";
 import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
 import {
@@ -149,24 +150,21 @@ export const ContactSection = () => {
                 <h4 className="mb-3 text-xs sm:text-sm text-gray-300">
                   Connect With Me
                 </h4>
-                <div className="flex gap-2 sm:gap-3 flex-wrap">
-                  {socials.map(({ icon: Icon, href, label }) => (
-                    <motion.a
-                      key={label}
-                      href={href}
-                      target="_blank"
-                      rel="noreferrer"
-                      title={`Visit ${label} profile`}
-                      aria-label={label}
-                      whileHover={{ scale: 1.15, backgroundColor: "rgba(255,255,255,1)", color: "#000" }}
-                      whileTap={{ scale: 0.92 }}
-                      transition={{ duration: 0.2 }}
-                      className="rounded-lg border border-white/20 p-2 transition-colors duration-300"
-                    >
-                      <Icon size={18} />
-                    </motion.a>
-                  ))}
-                </div>
+                <StyledWrapper>
+                  <ul className="social-list">
+                    {socials.map(({ icon: Icon, href, label }) => (
+                      <li key={label} className="iso-pro">
+                        <span />
+                        <span />
+                        <span />
+                        <a href={href} target="_blank" rel="noreferrer" aria-label={label}>
+                          <Icon className="svg" />
+                        </a>
+                        <div className="text">{label}</div>
+                      </li>
+                    ))}
+                  </ul>
+                </StyledWrapper>
               </div>
             </motion.div>
 
@@ -251,3 +249,118 @@ export const ContactSection = () => {
     </section>
   );
 };
+
+const StyledWrapper = styled.div`
+  .social-list {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .social-list li {
+    cursor: pointer;
+  }
+
+  .iso-pro {
+    position: relative;
+    transition: 0.5s;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .iso-pro a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+  }
+
+  .svg {
+    transition: all 0.3s;
+    padding: 1rem;
+    height: 60px;
+    width: 60px;
+    border-radius: 100%;
+    color: #fff;
+    /* Adhering to the theme: glass effect instead of orange */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05),
+      inset 0 0 5px rgba(255, 255, 255, 0.1), 0 5px 5px rgba(0, 0, 0, 0.164);
+  }
+
+  .text {
+    opacity: 0;
+    border-radius: 5px;
+    padding: 5px 10px;
+    transition: all 0.3s;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: absolute;
+    z-index: 9999;
+    box-shadow: -5px 0 1px rgba(153, 153, 153, 0.1),
+      -10px 0 1px rgba(153, 153, 153, 0.05),
+      inset 0 0 10px rgba(255, 255, 255, 0.1), 0 5px 5px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  /* Isometric projection */
+  .iso-pro:hover a > .svg {
+    transform: translate(15px, -15px);
+    border-radius: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .iso-pro:hover .text {
+    opacity: 1;
+    transform: translate(25px, -2px) skew(-5deg);
+  }
+
+  .iso-pro span {
+    opacity: 0;
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1),
+      inset 0 0 5px rgba(255, 255, 255, 0.2), 0 5px 5px rgba(0, 0, 0, 0.164);
+    border-radius: 50%;
+    transition: all 0.3s;
+    height: 60px;
+    width: 60px;
+    pointer-events: none;
+  }
+
+  .iso-pro:hover span {
+    opacity: 1;
+  }
+
+  .iso-pro:hover span:nth-child(1) {
+    opacity: 0.2;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .iso-pro:hover span:nth-child(2) {
+    opacity: 0.4;
+    transform: translate(5px, -5px);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .iso-pro:hover span:nth-child(3) {
+    opacity: 0.6;
+    transform: translate(10px, -10px);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+`;

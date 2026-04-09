@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavBar } from "./NavBar";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const VIDEO_URL =
   "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4";
@@ -8,16 +8,41 @@ const VIDEO_URL =
 const spring = [0.16, 1, 0.3, 1];
 const smooth = [0.33, 1, 0.68, 1];
 
-/* Character-by-character spring reveal */
-const AnimatedHeading = ({
-  text,
-  initialDelay = 200,
-  charDelay = 28,
-  duration = 520,
-  className = "",
-}) => {
+const Typewriter = ({ words, delay = 2000 }) => {
+  const [index, setIndex] = useState(0);
+  const [subIndex, setSubIndex] = useState(0);
+  const [reverse, setReverse] = useState(false);
+
+  useEffect(() => {
+    if (subIndex === words[index].length + 1 && !reverse) {
+      setTimeout(() => setReverse(true), delay);
+      return;
+    }
+
+    if (subIndex === 0 && reverse) {
+      setReverse(false);
+      setIndex((prev) => (prev + 1) % words.length);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setSubIndex((prev) => prev + (reverse ? -1 : 1));
+    }, reverse ? 75 : 150);
+
+    return () => clearTimeout(timeout);
+  }, [subIndex, index, reverse, words, delay]);
+
+  return (
+    <span className="inline-block min-w-[1ch]">
+      {words[index].substring(0, subIndex)}
+      <span className="inline-block w-[2px] h-[0.9em] bg-white ml-1 animate-pulse align-middle" />
+    </span>
+  );
+};
+
+/* Character-by-character reveal for the main name */
+const NameHeading = ({ text, initialDelay = 200, className = "" }) => {
   const [animate, setAnimate] = useState(false);
-  const lines = text.split("\n");
 
   useEffect(() => {
     const id = setTimeout(() => setAnimate(true), initialDelay);
@@ -26,40 +51,28 @@ const AnimatedHeading = ({
 
   return (
     <h1 className={className} style={{ letterSpacing: "-0.04em" }}>
-      {lines.map((line, lineIndex) => {
-        const lineLen = line.length;
-        return (
-          <span key={`line-${lineIndex}`} className="block overflow-hidden">
-            {line.split("").map((char, charIndex) => {
-              const delay =
-                lineIndex * lineLen * charDelay + charIndex * charDelay;
-              return (
-                <span
-                  key={`c-${lineIndex}-${charIndex}`}
-                  className="inline-block"
-                  style={{
-                    opacity: animate ? 1 : 0,
-                    transform: animate
-                      ? "translateY(0)"
-                      : "translateY(22px)",
-                    transitionProperty: "opacity, transform",
-                    transitionDuration: `${duration}ms`,
-                    transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
-                    transitionDelay: `${delay}ms`,
-                  }}
-                >
-                  {char === " " ? "\u00A0" : char}
-                </span>
-              );
-            })}
+      <span className="block overflow-hidden">
+        {text.split("").map((char, i) => (
+          <span
+            key={i}
+            className="inline-block"
+            style={{
+              opacity: animate ? 1 : 0,
+              transform: animate ? "translateY(0)" : "translateY(100%)",
+              transition: `all 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.03}s`
+            }}
+          >
+            {char === " " ? "\u00A0" : char}
           </span>
-        );
-      })}
+        ))}
+      </span>
     </h1>
   );
 };
 
 export const HeroSection = () => {
+  const words = ["experiences.", "solutions.", "applications.", "products."];
+
   return (
     <section
       id="hero"
@@ -80,13 +93,22 @@ export const HeroSection = () => {
         <div className="flex flex-1 flex-col justify-end px-4 pb-8 sm:px-6 md:pb-12 md:px-12 lg:px-16 lg:pb-16">
           <div className="lg:grid lg:grid-cols-2 lg:items-end gap-8">
             <div className="w-full">
-              <AnimatedHeading
-                text={"Yash Gupta\nBuilding digital experiences."}
+              <NameHeading
+                text="Yash Gupta"
                 initialDelay={200}
-                charDelay={28}
-                duration={520}
-                className="mb-4 text-3xl font-normal leading-tight sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
+                className="mb-1 text-3xl font-normal leading-tight sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl"
               />
+              
+              <div className="mb-4 overflow-hidden">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6, duration: 0.8, ease: spring }}
+                  className="text-2xl font-light leading-tight sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl whitespace-nowrap"
+                >
+                  Building digital <Typewriter words={words} />
+                </motion.div>
+              </div>
 
               {/* Subtitle — word-level fade up */}
               <motion.p
@@ -139,7 +161,7 @@ export const HeroSection = () => {
                 transition={{ duration: 0.22, ease: smooth }}
                 className="liquid-glass rounded-xl border border-white/20 px-4 sm:px-6 py-2.5 sm:py-3"
               >
-                <p className="text-base font-light leading-relaxed sm:text-lg md:text-xl lg:text-2xl">
+                <p className="text-base font-light leading-relaxed sm:text-lg md:text-xl lg:text-2xl whitespace-nowrap">
                   Web. Mobile. Problem Solving.
                 </p>
               </motion.div>
@@ -149,4 +171,4 @@ export const HeroSection = () => {
       </div>
     </section>
   );
-};
+};
