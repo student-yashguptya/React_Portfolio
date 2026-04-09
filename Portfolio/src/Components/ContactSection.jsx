@@ -1,32 +1,13 @@
 import { useState, useRef } from "react";
 import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-};
 import {
-  Instagram,
-  Linkedin,
-  Mail,
-  MapPin,
-  Phone,
-  Send,
-  Github,
+  Instagram, Linkedin, Mail, MapPin, Phone, Send, Github,
 } from "lucide-react";
+import {
+  staggerContainer, fadeUp, fadeUpSm, headingReveal, dividerReveal,
+  slideFromLeft, slideFromRight,
+} from "../lib/animations";
 
 const contactItems = [
   {
@@ -49,25 +30,40 @@ const contactItems = [
   },
 ];
 
+const socials = [
+  {
+    icon: Linkedin,
+    href: "https://www.linkedin.com/in/yash-gupta-4178062a8/",
+    label: "LinkedIn",
+  },
+  {
+    icon: Github,
+    href: "https://github.com/yashgupta6",
+    label: "GitHub",
+  },
+  {
+    icon: Instagram,
+    href: "https://www.instagram.com/yash.gupta6/?next=%2F&hl=en",
+    label: "Instagram",
+  },
+];
+
 export const ContactSection = () => {
   const form = useRef();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
+  const [submitStatus, setSubmitStatus] = useState(null);
 
   const sendEmail = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus(null);
 
-    // Requires environment variables. Fallback placeholders show the needed setup in Vercel.
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || "YOUR_SERVICE_ID";
     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || "YOUR_TEMPLATE_ID";
     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY";
 
     emailjs
-      .sendForm(serviceId, templateId, form.current, {
-        publicKey: publicKey,
-      })
+      .sendForm(serviceId, templateId, form.current, { publicKey })
       .then(
         () => {
           setIsSubmitting(false);
@@ -87,22 +83,36 @@ export const ContactSection = () => {
     <section id="contact" className="bg-black py-16 sm:py-20 md:py-24 text-white">
       <div className="px-4 sm:px-6 md:px-12 lg:px-16">
         <motion.div
-          variants={containerVariants}
+          variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
+          viewport={{ once: true, amount: 0.08 }}
           className="mx-auto max-w-6xl"
         >
-          <motion.h2 variants={itemVariants} className="mb-3 sm:mb-4 text-center text-2xl sm:text-3xl font-normal md:text-5xl">
-            Get In Touch
-          </motion.h2>
+          <div className="overflow-hidden mb-3 sm:mb-4">
+            <motion.h2
+              variants={headingReveal}
+              className="text-center text-2xl sm:text-3xl font-normal md:text-5xl"
+            >
+              Get In Touch
+            </motion.h2>
+          </div>
 
-          <motion.p variants={itemVariants} className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300">
+          <motion.div variants={dividerReveal} className="section-divider mx-auto mb-5 max-w-xs" />
+
+          <motion.p
+            variants={fadeUpSm}
+            className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300"
+          >
             Have a project in mind or want to collaborate? Let&apos;s connect.
           </motion.p>
 
           <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2">
-            <motion.div variants={itemVariants} className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-6 md:p-8">
+            {/* Contact info */}
+            <motion.div
+              variants={slideFromLeft}
+              className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-6 md:p-8"
+            >
               <h3 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-medium">
                 Contact Information
               </h3>
@@ -112,13 +122,11 @@ export const ContactSection = () => {
                   const Icon = item.icon;
                   return (
                     <div key={item.label} className="flex items-start gap-3 sm:gap-4">
-                      <div className="rounded-lg border border-white/20 p-2 flex-shrink-0">
+                      <div className="icon-box rounded-lg border border-white/20 p-2 flex-shrink-0">
                         <Icon className="h-5 w-5" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs sm:text-sm text-gray-300">
-                          {item.label}
-                        </p>
+                        <p className="text-xs sm:text-sm text-gray-300">{item.label}</p>
                         {item.href ? (
                           <a
                             href={item.href}
@@ -142,94 +150,75 @@ export const ContactSection = () => {
                   Connect With Me
                 </h4>
                 <div className="flex gap-2 sm:gap-3 flex-wrap">
-                  <a
-                    href="https://www.linkedin.com/in/yash-gupta-4178062a8/"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-lg border border-white/20 p-2 transition-colors duration-300 hover:bg-white hover:text-black"
-                    title="Visit LinkedIn profile"
-                    aria-label="LinkedIn"
-                  >
-                    <Linkedin size={18} />
-                  </a>
-                  <a
-                    href="https://github.com/yashgupta6"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-lg border border-white/20 p-2 transition-colors duration-300 hover:bg-white hover:text-black"
-                    title="Visit GitHub profile"
-                    aria-label="GitHub"
-                  >
-                    <Github size={18} />
-                  </a>
-                  <a
-                    href="https://www.instagram.com/yash.gupta6/?next=%2F&hl=en"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-lg border border-white/20 p-2 transition-colors duration-300 hover:bg-white hover:text-black"
-                    title="Visit Instagram profile"
-                    aria-label="Instagram"
-                  >
-                    <Instagram size={18} />
-                  </a>
+                  {socials.map(({ icon: Icon, href, label }) => (
+                    <motion.a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noreferrer"
+                      title={`Visit ${label} profile`}
+                      aria-label={label}
+                      whileHover={{ scale: 1.15, backgroundColor: "rgba(255,255,255,1)", color: "#000" }}
+                      whileTap={{ scale: 0.92 }}
+                      transition={{ duration: 0.2 }}
+                      className="rounded-lg border border-white/20 p-2 transition-colors duration-300"
+                    >
+                      <Icon size={18} />
+                    </motion.a>
+                  ))}
                 </div>
               </div>
             </motion.div>
 
-            <motion.div variants={itemVariants} className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-6 md:p-8">
+            {/* Form */}
+            <motion.div
+              variants={slideFromRight}
+              className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-6 md:p-8"
+            >
               <h3 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-medium">
                 Send a Message
               </h3>
               <form ref={form} onSubmit={sendEmail} className="space-y-4 sm:space-y-5">
                 {submitStatus === "success" && (
-                  <div className="rounded-lg bg-green-500/10 border border-green-500/20 p-3 text-green-400 text-sm">
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-lg bg-green-500/10 border border-green-500/20 p-3 text-green-400 text-sm"
+                  >
                     Message sent successfully! I will get back to you soon.
-                  </div>
+                  </motion.div>
                 )}
                 {submitStatus === "error" && (
-                  <div className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-red-400 text-sm">
-                    Failed to send message. Please try again later or email me directly.
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-lg bg-red-500/10 border border-red-500/20 p-3 text-red-400 text-sm"
+                  >
+                    Failed to send message. Please try again or email me directly.
+                  </motion.div>
                 )}
-                <div>
-                  <label
-                    htmlFor="user_name"
-                    className="mb-2 block text-xs sm:text-sm text-gray-300"
-                  >
-                    Your Name
-                  </label>
-                  <input
-                    type="text"
-                    id="user_name"
-                    name="user_name"
-                    placeholder="Enter your name"
-                    className="w-full rounded-lg border border-white/20 bg-black/40 px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base text-white placeholder:text-gray-400 focus:border-white/50 focus:outline-none transition-colors duration-300"
-                    required
-                  />
-                </div>
+
+                {[
+                  { id: "user_name", label: "Your Name", type: "text", placeholder: "Enter your name" },
+                  { id: "user_email", label: "Your Email", type: "email", placeholder: "Enter your email" },
+                ].map((field) => (
+                  <div key={field.id}>
+                    <label htmlFor={field.id} className="mb-2 block text-xs sm:text-sm text-gray-300">
+                      {field.label}
+                    </label>
+                    <input
+                      type={field.type}
+                      id={field.id}
+                      name={field.id}
+                      placeholder={field.placeholder}
+                      className="input-glow w-full rounded-lg border border-white/20 bg-black/40 px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base text-white placeholder:text-gray-400"
+                      required
+                    />
+                  </div>
+                ))}
 
                 <div>
-                  <label
-                    htmlFor="user_email"
-                    className="mb-2 block text-xs sm:text-sm text-gray-300"
-                  >
-                    Your Email
-                  </label>
-                  <input
-                    type="email"
-                    id="user_email"
-                    name="user_email"
-                    placeholder="Enter your email"
-                    className="w-full rounded-lg border border-white/20 bg-black/40 px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base text-white placeholder:text-gray-400 focus:border-white/50 focus:outline-none transition-colors duration-300"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="mb-2 block text-xs sm:text-sm text-gray-300"
-                  >
+                  <label htmlFor="message" className="mb-2 block text-xs sm:text-sm text-gray-300">
                     Your Message
                   </label>
                   <textarea
@@ -237,26 +226,23 @@ export const ContactSection = () => {
                     name="message"
                     rows={4}
                     placeholder="Enter your message"
-                    className="w-full resize-none rounded-lg border border-white/20 bg-black/40 px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base text-white placeholder:text-gray-400 focus:border-white/50 focus:outline-none transition-colors duration-300"
+                    className="input-glow w-full resize-none rounded-lg border border-white/20 bg-black/40 px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base text-white placeholder:text-gray-400"
                     required
                   />
                 </div>
 
-                <button
+                <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`inline-flex w-full items-center justify-center gap-2 rounded-lg bg-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-black transition-colors duration-300 ${
-                    isSubmitting ? "opacity-70 cursor-not-allowed" : "hover:bg-gray-100"
+                  whileHover={!isSubmitting ? { scale: 1.02 } : {}}
+                  whileTap={!isSubmitting ? { scale: 0.97 } : {}}
+                  transition={{ duration: 0.18 }}
+                  className={`btn-shimmer inline-flex w-full items-center justify-center gap-2 rounded-lg bg-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-black ${
+                    isSubmitting ? "opacity-70 cursor-not-allowed" : ""
                   }`}
                 >
-                  {isSubmitting ? (
-                    "Sending..."
-                  ) : (
-                    <>
-                      Send Message <Send size={16} />
-                    </>
-                  )}
-                </button>
+                  {isSubmitting ? "Sending..." : <><span>Send Message</span><Send size={16} /></>}
+                </motion.button>
               </form>
             </motion.div>
           </div>

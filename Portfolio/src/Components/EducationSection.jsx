@@ -1,22 +1,8 @@
 import { GraduationCap } from "lucide-react";
 import { motion } from "framer-motion";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-};
+import {
+  staggerContainer, fadeUp, fadeUpSm, headingReveal, dividerReveal, staggerFast,
+} from "../lib/animations";
 
 const educationItems = [
   {
@@ -25,10 +11,19 @@ const educationItems = [
     date: "March 2022",
   },
   {
-    institute: "Shri Ram Murti Smarak College of Engineering and Technology",
-    degree: "Bachelor of Technology in Computer Science and Engineering (CSE)",
+    institute:
+      "Shri Ram Murti Smarak College of Engineering and Technology",
+    degree:
+      "Bachelor of Technology in Computer Science and Engineering (CSE)",
     date: "June 2026",
   },
+];
+
+const subjects = [
+  "Data Structure",
+  "Database Management System",
+  "Computer Networks",
+  "Software Engineering",
 ];
 
 export const EducationSection = () => {
@@ -36,30 +31,40 @@ export const EducationSection = () => {
     <section id="education" className="bg-black py-16 sm:py-20 md:py-24 text-white">
       <div className="px-4 sm:px-6 md:px-12 lg:px-16">
         <motion.div
-          variants={containerVariants}
+          variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.15 }}
           className="mx-auto max-w-6xl"
         >
-          <motion.h2 variants={itemVariants} className="mb-3 sm:mb-4 text-center text-2xl sm:text-3xl font-normal md:text-5xl">
-            Education
-          </motion.h2>
+          <div className="overflow-hidden mb-3 sm:mb-4">
+            <motion.h2
+              variants={headingReveal}
+              className="text-center text-2xl sm:text-3xl font-normal md:text-5xl"
+            >
+              Education
+            </motion.h2>
+          </div>
 
-          <motion.p variants={itemVariants} className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300">
+          <motion.div variants={dividerReveal} className="section-divider mx-auto mb-5 max-w-xs" />
+
+          <motion.p
+            variants={fadeUpSm}
+            className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300"
+          >
             Academic foundation that shaped my technical journey.
           </motion.p>
 
           <div className="space-y-4 sm:space-y-5">
             {educationItems.map((item) => (
               <motion.article
-                variants={itemVariants}
+                variants={fadeUp}
                 key={`${item.institute}-${item.date}`}
-                className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-5 md:p-7 transition-all duration-300 hover:border-white/30 hover:bg-white/5"
+                className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-5 md:p-7 card-lift"
               >
                 <div className="flex flex-col justify-between gap-3 sm:gap-4 md:flex-row md:items-start">
                   <div className="flex items-start gap-3 sm:gap-4 min-w-0 flex-1">
-                    <div className="rounded-lg border border-white/20 p-2 flex-shrink-0">
+                    <div className="icon-box rounded-lg border border-white/20 p-2 flex-shrink-0">
                       <GraduationCap className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
@@ -77,23 +82,30 @@ export const EducationSection = () => {
             ))}
           </div>
 
-          <motion.div variants={itemVariants} className="mt-8 sm:mt-10 md:mt-12 liquid-glass rounded-2xl border border-white/20 p-4 sm:p-5 md:p-7">
+          <motion.div
+            variants={fadeUp}
+            className="mt-8 sm:mt-10 md:mt-12 liquid-glass rounded-2xl border border-white/20 p-4 sm:p-5 md:p-7"
+          >
             <h3 className="mb-4 text-lg font-medium">Subjects of Interest</h3>
-            <div className="flex flex-wrap gap-2 sm:gap-3">
-              {[
-                "Data Structure",
-                "Database Management System",
-                "Computer Networks",
-                "Software Engineering",
-              ].map((subject) => (
-                <span
+            <motion.div
+              variants={staggerFast}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="flex flex-wrap gap-2 sm:gap-3"
+            >
+              {subjects.map((subject) => (
+                <motion.span
                   key={subject}
-                  className="rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-sm transition-colors duration-300 hover:bg-white hover:text-black"
+                  variants={fadeUpSm}
+                  whileHover={{ scale: 1.07, backgroundColor: "rgba(255,255,255,1)", color: "#000" }}
+                  transition={{ duration: 0.2 }}
+                  className="rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-sm cursor-default transition-colors duration-300 hover:bg-white hover:text-black"
                 >
                   {subject}
-                </span>
+                </motion.span>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
         </motion.div>
       </div>

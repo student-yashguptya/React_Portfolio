@@ -1,22 +1,12 @@
 import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-};
+import {
+  staggerContainer,
+  fadeUp,
+  fadeUpSm,
+  headingReveal,
+  dividerReveal,
+} from "../lib/animations";
 
 const projects = [
   {
@@ -80,20 +70,30 @@ export const ProjectSection = () => {
   return (
     <section id="projects" className="bg-black py-16 sm:py-20 md:py-24 text-white">
       <div className="px-4 sm:px-6 md:px-12 lg:px-16">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
+        <div
+          data-animate="stagger"
           className="mx-auto max-w-6xl"
         >
-          <motion.h2 variants={itemVariants} className="mb-3 sm:mb-4 text-center text-2xl sm:text-3xl font-normal md:text-5xl">
-            Featured Projects
-          </motion.h2>
+          <div className="overflow-hidden mb-3 sm:mb-4">
+            <h2
+              data-animate="heading"
+              className="text-center text-2xl sm:text-3xl font-normal md:text-5xl"
+            >
+              Featured Projects
+            </h2>
+          </div>
 
-          <motion.p variants={itemVariants} className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300">
+          <div
+            data-animate="scale-up"
+            className="section-divider mx-auto mb-5 max-w-xs transition-all duration-700 ease-out"
+          />
+
+          <p
+            data-animate="fade-up"
+            className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300"
+          >
             Selected work across web and mobile products.
-          </motion.p>
+          </p>
 
           <div className="projects-grid grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:gap-8">
             {projects.map((project) => {
@@ -101,23 +101,24 @@ export const ProjectSection = () => {
               const ctaLabel = project.liveUrl ? "View Project" : "Request Demo";
 
               return (
-                <motion.article
-                  variants={itemVariants}
+                <article
+                  data-animate="slide-up"
                   key={project.title}
                   style={{ "--card-rotate": `${project.rotation}deg` }}
                   className={`project-glass-card overflow-hidden rounded-2xl border ${project.accentClass}`}
                 >
+                  {/* Image with zoom on card hover via CSS */}
                   <div
                     data-text={project.type}
-                    className="project-card-media relative h-40 sm:h-48 md:h-56 lg:h-60 overflow-hidden"
+                    className="project-card-media project-card-image-wrap relative h-40 sm:h-48 md:h-56 lg:h-60"
                   >
                     <img
                       src={project.image}
                       alt={`${project.title} preview`}
                       loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                      onError={(event) => {
-                        event.currentTarget.src = project.fallbackImage;
+                      className="h-full w-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = project.fallbackImage;
                       }}
                     />
                   </div>
@@ -132,29 +133,34 @@ export const ProjectSection = () => {
 
                     <div className="mb-4 sm:mb-5 flex flex-wrap gap-2">
                       {project.tags.slice(0, 3).map((tag) => (
-                        <span
+                        <motion.span
                           key={tag}
-                          className={`rounded-md border px-2 sm:px-2.5 py-1 text-xs font-medium transition-colors duration-200 ${project.chipClass}`}
+                          whileHover={{ scale: 1.07 }}
+                          transition={{ duration: 0.18 }}
+                          className={`rounded-md border px-2 sm:px-2.5 py-1 text-xs font-medium transition-colors duration-200 cursor-default ${project.chipClass}`}
                         >
                           {tag}
-                        </span>
+                        </motion.span>
                       ))}
                     </div>
 
-                    <a
+                    <motion.a
                       href={ctaHref}
                       target={project.liveUrl ? "_blank" : undefined}
                       rel={project.liveUrl ? "noreferrer" : undefined}
-                      className="inline-flex items-center gap-2 rounded-lg bg-white px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-black transition-colors duration-300 hover:bg-gray-100"
+                      whileHover={{ scale: 1.04 }}
+                      whileTap={{ scale: 0.96 }}
+                      transition={{ duration: 0.18 }}
+                      className="btn-shimmer inline-flex items-center gap-2 rounded-lg bg-white px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-black"
                     >
                       {ctaLabel} <ExternalLink size={16} />
-                    </a>
+                    </motion.a>
                   </div>
-                </motion.article>
+                </article>
               );
             })}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

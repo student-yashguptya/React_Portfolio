@@ -8,8 +8,11 @@ import { CertificationsSection } from "../../Components/CertificationsSection";
 import { ProjectSection } from "../../Components/ProjectSection";
 import { ContactSection } from "../../Components/ContactSection";
 import { Footer } from "../../Components/Footer";
+import { useScrollObserver } from "../../hooks/useScrollObserver";
 
 export const Home = () => {
+  useScrollObserver();
+
   return (
     <div className="bg-black text-white font-sans overflow-x-hidden">
       <HeroSection />

@@ -1,58 +1,26 @@
 import {
-  Atom,
-  Braces,
-  Code2,
-  Database,
-  FileCode2,
-  Figma,
-  GitBranch,
-  Github,
-  Globe,
-  Layers,
-  MonitorSmartphone,
-  Server,
-  Smartphone,
-  Terminal,
-  Coffee,
-  Box,
+  Atom, Braces, Code2, Database, FileCode2, Figma,
+  GitBranch, Github, Globe, Layers, MonitorSmartphone,
+  Server, Smartphone, Terminal, Coffee, Box,
 } from "lucide-react";
 import { motion } from "framer-motion";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-};
+import {
+  staggerContainer, fadeUpSm, headingReveal, dividerReveal, scaleIn,
+} from "../lib/animations";
 
 const skills = [
-  // Frontend
   { name: "HTML/CSS", category: "frontend" },
   { name: "JavaScript", category: "frontend" },
   { name: "React.js", category: "frontend" },
   { name: "React Native", category: "frontend" },
   { name: "Flutter", category: "frontend" },
-  // Backend
   { name: "Node.js", category: "backend" },
-  // Database
   { name: "MongoDB", category: "database" },
   { name: "SQL", category: "database" },
-  // Tools & Platforms
   { name: "Git", category: "tools" },
   { name: "GitHub", category: "tools" },
   { name: "Android Studio", category: "tools" },
   { name: "Blender", category: "tools" },
-  // Languages
   { name: "Dart", category: "language" },
   { name: "C", category: "language" },
   { name: "Java", category: "language" },
@@ -92,36 +60,45 @@ export const SkillsSection = () => {
     <section id="skills" className="bg-black py-16 sm:py-20 md:py-24 text-white">
       <div className="px-4 sm:px-6 md:px-12 lg:px-16">
         <motion.div
-          variants={containerVariants}
+          variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
+          viewport={{ once: true, amount: 0.15 }}
           className="mx-auto max-w-6xl"
         >
-          <motion.h2 variants={itemVariants} className="mb-3 sm:mb-4 text-center text-2xl sm:text-3xl font-normal md:text-5xl">
-            Technical Skills
-          </motion.h2>
+          <div className="overflow-hidden mb-3 sm:mb-4">
+            <motion.h2
+              variants={headingReveal}
+              className="text-center text-2xl sm:text-3xl font-normal md:text-5xl"
+            >
+              Technical Skills
+            </motion.h2>
+          </div>
 
-          <motion.p variants={itemVariants} className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300">
+          <motion.div
+            variants={dividerReveal}
+            className="section-divider mx-auto mb-5 max-w-xs"
+          />
+
+          <motion.p
+            variants={fadeUpSm}
+            className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300"
+          >
             Proficient across frontend, backend, databases, tools, and multiple
             programming languages.
           </motion.p>
 
-          <motion.div variants={itemVariants} className="skills-rotator">
+          <motion.div variants={scaleIn} className="skills-rotator">
             <div className="wrapper">
               <div className="inner" style={{ "--quantity": skills.length }}>
                 {skills.map((skill, index) => {
                   const SkillIcon = skillIcons[skill.name] ?? FallbackIcon;
                   const color = categoryColors[skill.category] ?? fallbackColor;
-
                   return (
                     <div
                       key={`${skill.name}-${skill.category}`}
                       className="card"
-                      style={{
-                        "--index": index,
-                        "--color-card": color,
-                      }}
+                      style={{ "--index": index, "--color-card": color }}
                     >
                       <div className="img">
                         <SkillIcon size={30} strokeWidth={1.8} />

@@ -1,22 +1,14 @@
 import { Briefcase, Code, User } from "lucide-react";
 import { motion } from "framer-motion";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-};
+import {
+  staggerContainer,
+  fadeUp,
+  fadeUpSm,
+  headingReveal,
+  dividerReveal,
+  slideFromLeft,
+  slideFromRight,
+} from "../lib/animations";
 
 const highlights = [
   {
@@ -43,19 +35,40 @@ export const AboutSection = () => {
   return (
     <section id="about" className="bg-black py-16 sm:py-20 md:py-24 text-white">
       <div className="px-4 sm:px-6 md:px-12 lg:px-16">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
+        <div
+          data-animate="stagger"
           className="mx-auto max-w-6xl"
         >
-          <motion.h2 variants={itemVariants} className="mb-8 sm:mb-10 md:mb-12 text-center text-2xl sm:text-3xl font-normal md:text-5xl">
-            About Me
-          </motion.h2>
+          {/* Heading clip reveal */}
+          <div className="overflow-hidden mb-3 sm:mb-4">
+            <h2
+              data-animate="heading"
+              className="text-center text-2xl sm:text-3xl font-normal md:text-5xl"
+            >
+              About Me
+            </h2>
+          </div>
+
+          {/* Animated divider */}
+          <div
+            data-animate="scale-up"
+            className="section-divider mx-auto mb-6 sm:mb-8 max-w-xs transition-all duration-700 ease-out"
+          />
+
+          <p
+            data-animate="fade-up"
+            className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300"
+          >
+            A full-stack developer with a passion for building scalable,
+            user-centric products.
+          </p>
 
           <div className="grid grid-cols-1 items-start gap-6 sm:gap-8 md:gap-10 lg:grid-cols-2">
-            <motion.div variants={itemVariants} className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-6 md:p-8">
+            {/* Left card — slide from left */}
+            <div
+              data-animate="slide-up"
+              className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-6 md:p-8 card-lift"
+            >
               <h3 className="mb-4 text-xl sm:text-2xl font-medium">
                 I&apos;m a developer crafting web and mobile products with
                 intention.
@@ -71,34 +84,57 @@ export const AboutSection = () => {
               </p>
 
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
-                <a
+                <motion.a
                   href="#contact"
-                  className="rounded-lg bg-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-black transition-colors duration-300 hover:bg-gray-100 text-center"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ duration: 0.18 }}
+                  className="btn-shimmer rounded-lg bg-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-black text-center"
                 >
                   Start a Chat
-                </a>
-                <a
+                </motion.a>
+                <motion.a
                   href="/Documents/Resume.pdf"
                   target="_blank"
                   rel="noreferrer"
-                  className="liquid-glass rounded-lg border border-white/20 px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-white transition-colors duration-300 hover:bg-white hover:text-black text-center"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ duration: 0.18 }}
+                  className="btn-shimmer btn-shimmer-light liquid-glass rounded-lg border border-white/20 px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-white hover:bg-white hover:text-black transition-colors duration-300 text-center"
                 >
                   Download Resume
-                </a>
+                </motion.a>
               </div>
-            </motion.div>
 
-            <div className="grid gap-4">
+              {/* Stats Row */}
+              <div className="mt-8 grid grid-cols-2 gap-4 border-t border-white/10 pt-6">
+                <div>
+                  <h4 className="text-3xl font-medium text-white mb-1">
+                    <span data-animate="count-up" data-target="15" data-suffix="+">0</span>
+                  </h4>
+                  <p className="text-xs text-gray-400">Projects Completed</p>
+                </div>
+                <div>
+                  <h4 className="text-3xl font-medium text-white mb-1">
+                    <span data-animate="count-up" data-target="99" data-suffix="%">0</span>
+                  </h4>
+                  <p className="text-xs text-gray-400">Client Satisfaction</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right cards */}
+            <div data-animate="stagger" className="grid gap-4">
               {highlights.map((item) => {
                 const Icon = item.icon;
                 return (
-                  <motion.div
-                    variants={itemVariants}
+                  <div
+                    data-animate="slide-up"
                     key={item.title}
-                    className="liquid-glass rounded-xl border border-white/20 p-4 sm:p-5 transition-all duration-300 hover:border-white/30 hover:bg-white/5"
+                    className="liquid-glass rounded-xl border border-white/20 p-4 sm:p-5 card-lift"
                   >
                     <div className="flex items-start gap-3 sm:gap-4">
-                      <div className="rounded-lg border border-white/20 p-2 flex-shrink-0">
+                      <div className="icon-box rounded-lg border border-white/20 p-2 flex-shrink-0">
                         <Icon className="h-5 w-5" />
                       </div>
                       <div className="min-w-0">
@@ -110,12 +146,12 @@ export const AboutSection = () => {
                         </p>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
