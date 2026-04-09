@@ -30,6 +30,7 @@ export const Footer = () => {
               Yash Gupta <span className="text-xs text-gray-400 font-normal ml-1">(Co-Founder & Developer)</span>
             </p>
             <p className="text-xs text-gray-500 max-w-xs text-center md:text-left">
+              Co-Founder @ <a href="https://katalyxsolutions.com" target="_blank" rel="noreferrer" className="text-white hover:text-emerald-400 transition-colors uppercase tracking-wider font-semibold">Katalyx Solutions</a>. 
               Building AI-driven digital products and scalable systems.
             </p>
           </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavBar } from "./NavBar";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react"; // ✅ NEW
 
 const VIDEO_URL =
   "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4";
@@ -8,6 +9,9 @@ const VIDEO_URL =
 const spring = [0.16, 1, 0.3, 1];
 const smooth = [0.33, 1, 0.68, 1];
 
+/* ========================= */
+/* TYPEWRITER COMPONENT */
+/* ========================= */
 const Typewriter = ({ words, delay = 2000 }) => {
   const [index, setIndex] = useState(0);
   const [subIndex, setSubIndex] = useState(0);
@@ -40,7 +44,9 @@ const Typewriter = ({ words, delay = 2000 }) => {
   );
 };
 
-/* Character-by-character reveal for the main name */
+/* ========================= */
+/* NAME ANIMATION */
+/* ========================= */
 const NameHeading = ({ text, initialDelay = 200, className = "" }) => {
   const [animate, setAnimate] = useState(false);
 
@@ -59,7 +65,9 @@ const NameHeading = ({ text, initialDelay = 200, className = "" }) => {
             style={{
               opacity: animate ? 1 : 0,
               transform: animate ? "translateY(0)" : "translateY(100%)",
-              transition: `all 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.03}s`
+              transition: `all 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${
+                i * 0.03
+              }s`
             }}
           >
             {char === " " ? "\u00A0" : char}
@@ -70,6 +78,9 @@ const NameHeading = ({ text, initialDelay = 200, className = "" }) => {
   );
 };
 
+/* ========================= */
+/* HERO SECTION */
+/* ========================= */
 export const HeroSection = () => {
   const words = ["experiences.", "solutions.", "applications.", "products."];
 
@@ -78,8 +89,9 @@ export const HeroSection = () => {
       id="hero"
       className="relative min-h-screen overflow-hidden bg-black text-white font-sans"
     >
+      {/* 🎥 VIDEO BACKGROUND */}
       <video
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover z-0"
         src={VIDEO_URL}
         autoPlay
         loop
@@ -87,13 +99,40 @@ export const HeroSection = () => {
         playsInline
       />
 
+      {/* ========================= */}
+      {/* 🐦 FULL HERO LOTTIE (NEW) */}
+      {/* ========================= */}
+      <div className="pointer-events-none absolute inset-0 z-[1] opacity-40">
+        <DotLottieReact
+          src="https://lottie.host/e6c662ce-d8af-41b1-a970-df3ca9d6fe60/AVmTdmaCr3.lottie"
+          loop
+          autoplay
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+
+      {/* ========================= */}
+      {/* 🐦 TOP 30% LOTTIE (NEW) */}
+      {/* ========================= */}
+      <div className="pointer-events-none absolute top-0 left-0 w-full h-[30%] z-[2] opacity-50 overflow-hidden">
+        <DotLottieReact
+          src="https://lottie.host/e6c662ce-d8af-41b1-a970-df3ca9d6fe60/AVmTdmaCr3.lottie"
+          loop
+          autoplay
+          style={{ width: "100%", height: "100%" }}
+        />
+      </div>
+
+      {/* ========================= */}
+      {/* 🎯 CONTENT (UNCHANGED) */}
+      {/* ========================= */}
       <div className="relative z-10 flex min-h-screen flex-col">
         <NavBar />
 
         <div className="flex flex-1 flex-col justify-end px-4 pb-8 sm:px-6 md:pb-12 md:px-12 lg:px-16 lg:pb-16">
           <div className="lg:grid lg:grid-cols-2 lg:items-end gap-8">
             <div className="w-full">
-              {/* Co-Founder Badge */}
+              {/* Badge */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -107,76 +146,64 @@ export const HeroSection = () => {
               <NameHeading
                 text="Yash Gupta"
                 initialDelay={200}
-                className="mb-1 text-3xl font-normal leading-tight sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl"
+                className="mb-1 text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl"
               />
-              
+
               <div className="mb-4 overflow-hidden">
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6, duration: 0.8, ease: spring }}
-                  className="text-2xl font-light leading-tight sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl"
+                  className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl"
                 >
                   Building digital <Typewriter words={words} />
                 </motion.div>
               </div>
 
-              {/* Enhanced Subtitle — Founder & Developer Perspective */}
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.85, duration: 0.7, ease: spring }}
-                className="mb-6 max-w-2xl text-sm leading-relaxed text-gray-300 sm:text-base md:text-lg"
+                className="mb-6 max-w-2xl text-sm text-gray-300 sm:text-base md:text-lg"
               >
-               Co-Founder & Lead Engineer at <a href="https://katalyxsolutions.com" target="_blank" rel="noreferrer" className="text-white underline decoration-emerald-500/50 underline-offset-4 hover:decoration-emerald-400 transition-all">Katalyx Solutions</a>, building AI-driven digital ecosystems and scalable, high-performance products. 
-              Full-Stack Developer crafting modern web and Android apps with clean design, seamless performance, and real-world impact.
+                Co-Founder & Lead Engineer at{" "}
+                <a
+                  href="https://katalyxsolutions.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-white underline decoration-emerald-500/50 underline-offset-4 hover:decoration-emerald-400 transition-all"
+                >
+                  Katalyx Solutions
+                </a>
+                , building AI-driven digital ecosystems and scalable,
+                high-performance products. Full-Stack Developer crafting modern
+                web and Android apps with clean design, seamless performance,
+                and real-world impact.
               </motion.p>
 
-              {/* Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.15, duration: 0.65, ease: spring }}
-                className="flex flex-wrap gap-3 sm:gap-4"
-              >
-                <motion.a
+              <motion.div className="flex flex-wrap gap-3 sm:gap-4">
+                <a
                   href="#contact"
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
-                  transition={{ duration: 0.18 }}
-                  className="btn-shimmer rounded-lg bg-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-black"
+                  className="rounded-lg bg-white px-6 py-3 text-sm font-medium text-black"
                 >
                   Get in Touch
-                </motion.a>
-                <motion.a
+                </a>
+                <a
                   href="#projects"
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
-                  transition={{ duration: 0.18 }}
-                  className="btn-shimmer btn-shimmer-light liquid-glass rounded-lg border border-white/20 px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-white hover:bg-white hover:text-black transition-colors duration-300"
+                  className="rounded-lg border border-white/20 px-6 py-3 text-sm text-white"
                 >
                   View My Work
-                </motion.a>
+                </a>
               </motion.div>
             </div>
 
-            {/* Tagline pill */}
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.35, duration: 0.75, ease: spring }}
-              className="mt-8 flex items-end justify-start lg:mt-0 lg:justify-end"
-            >
-              <motion.div
-                whileHover={{ scale: 1.03 }}
-                transition={{ duration: 0.22, ease: smooth }}
-                className="liquid-glass rounded-xl border border-white/20 px-4 sm:px-6 py-2.5 sm:py-3"
-              >
-                <p className="text-base font-light leading-relaxed sm:text-lg md:text-xl lg:text-2xl whitespace-nowrap">
+            <div className="mt-8 lg:mt-0 lg:flex lg:justify-end">
+              <div className="rounded-xl border border-white/20 px-6 py-3">
+                <p className="text-lg md:text-xl lg:text-2xl">
                   Web. Mobile. Problem Solving.
                 </p>
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

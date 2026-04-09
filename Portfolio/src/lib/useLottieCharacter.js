@@ -23,7 +23,8 @@ import { useAnimation } from 'framer-motion';
 /* ─── Layout constants ─────────────────────────────────────────────────────── */
 export const SIZE_DESKTOP = 160;
 export const SIZE_MOBILE  = 96;
-export const FLOOR_GAP    = 20;
+export const FLOOR_GAP    = 5;
+
 
 /* ─── Phase enum ───────────────────────────────────────────────────────────── */
 export const Phase = Object.freeze({
@@ -52,10 +53,11 @@ export const getJumpY  = () => -(window.innerHeight * 0.83);
 
 /* ─── Transitions ──────────────────────────────────────────────────────────── */
 const T = {
-  entryFall:   { type: 'spring', stiffness: 120, damping: 20, mass: 1.8  },
-  sectionFall: { type: 'spring', stiffness: 180, damping: 24, mass: 1.2  },
+  entryFall:   { type: 'spring', stiffness: 120, damping: 20, mass: 2.0  },
+  sectionFall: { type: 'spring', stiffness: 180, damping: 24, mass: 2.0  },
   rise:        { duration: 1.2,  ease: [0.16, 1, 0.3, 1]                 },
   jump:        { duration: 0.28, ease: [0.34, 1.56, 0.64, 1]             },
+
   squishIn:    { duration: 0.11, ease: 'easeOut'                          },
   squishOut:   { type: 'spring', stiffness: 420, damping: 20              },
 };
