@@ -11,6 +11,64 @@ import {
 const projects = [
   {
     title: "HealthcareX24",
+    type: "Enterprise Health Platform",
+    description:
+      "Fragmented medical records and delayed doctor access led to healthcare inefficiencies. I engineered a centralized AI platform that unified patient data and enabled instant virtual consultations, reducing administrative overhead by 40%.",
+    image: "/images/healthcare_x24_generated.png",
+    fallbackImage: "/images/healthcare_x24_generated.png",
+    liveUrl: "https://healthcarex24.com",
+    tags: ["React", "AI", "Node.js", "WebRTC"],
+    accentClass: "border-emerald-400/40",
+    rotation: -3,
+    chipClass:
+      "border-emerald-400/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20",
+  },
+  {
+    title: "Katalyx HR ERP",
+    type: "Automation System",
+    description:
+      "Manual payroll and employee management caused significant operational bottlenecks. I architected an automated ERP solution that streamlined the entire employee lifecycle and payroll processing, ensuring 100% compliance and precision.",
+    image: "/images/katalyx_hr_erp_generated.png",
+    fallbackImage: "/images/katalyx_hr_erp_generated.png",
+    liveUrl: "https://katalyxhrerp.online",
+    tags: ["React", "Express", "MongoDB", "Redux"],
+    accentClass: "border-blue-400/40",
+    rotation: 2,
+    chipClass:
+      "border-blue-400/30 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20",
+  },
+  {
+    title: "AbhiRoom",
+    type: "Property Management",
+    description:
+      "Traditional room booking suffered from unverified listings and static pricing issues. I developed a smart booking ecosystem with dynamic pricing and verified check-ins, significantly improving trust and occupancy rates for property owners.",
+    image: "/images/abhiroom_booking_generated.png",
+    fallbackImage: "/images/abhiroom_booking_generated.png",
+    liveUrl: "https://abhiroom.in",
+    tags: ["Next.js", "Node.js", "PostgreSQL", "Stripe"],
+    accentClass: "border-rose-400/40",
+    rotation: 4,
+    chipClass:
+      "border-rose-400/30 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20",
+  },
+  {
+    title: "Inventory Intelligence",
+    type: "Operations App",
+    description:
+      "Lack of real-time stock visibility often led to supply chain disruptions. I built an intelligent inventory tracking app with real-time updates and predictive stock alerts, providing businesses with a 360° view of their operations.",
+    image: "/images/inventory_management_generated.png",
+    fallbackImage: "/images/inventory_management_generated.png",
+    liveUrl: null,
+    tags: ["React Expo", "Node.js", "MongoDB", "Express"],
+    accentClass: "border-white/20",
+    rotation: -2,
+    chipClass: "border-white/20 bg-white/5 text-gray-200 hover:bg-white/10",
+  },
+];
+/* OLD PROJECTS:
+const projects = [
+  {
+    title: "HealthcareX24",
     type: "App + Website",
     description:
       "Comprehensive enterprise healthcare platform for patient management, instant doctor consultations, and medical records.",
@@ -65,6 +123,7 @@ const projects = [
     chipClass: "border-white/20 bg-white/5 text-gray-200 hover:bg-white/10",
   },
 ];
+*/
 
 export const ProjectSection = () => {
   return (

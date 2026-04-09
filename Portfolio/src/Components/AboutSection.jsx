@@ -1,4 +1,4 @@
-import { Briefcase, Code, User } from "lucide-react";
+import { Briefcase, Code, User, Sparkles, Layers, Target } from "lucide-react";
 import { motion } from "framer-motion";
 import {
   staggerContainer,
@@ -15,19 +15,37 @@ const highlights = [
     icon: Code,
     title: "Web & App Development",
     description:
-      "Building responsive websites and Android applications with clean UI and robust backend systems.",
+      "Developing high-performance, responsive websites and Android applications with clean code.",
   },
   {
-    icon: User,
-    title: "UI/UX Design",
+    icon: Sparkles, // Using Sparkles for UI/UX
+    title: "Intelligence & Design",
     description:
-      "Designing intuitive, modern interfaces for web and mobile with a focus on usability and clarity.",
+      "Crafting intuitive, modern interfaces with a focus on seamless user experience across devices.",
   },
   {
     icon: Briefcase,
     title: "Project Management",
     description:
-      "Managing end-to-end delivery with agile workflows, clear communication, and quality execution.",
+      "Leading end-to-end delivery with agile workflows and technical project leadership.",
+  },
+  {
+    icon: Layers, // Using Layers for Architecture
+    title: "Technical Architecture",
+    description:
+      "Designing scalable cloud systems and intelligent automation layers for enterprise workloads.",
+  },
+  {
+    icon: Target, // Using Target for Strategy
+    title: "Product Strategy",
+    description:
+      "Translating commercial vision into high-impact digital products and scalable solutions.",
+  },
+  {
+    icon: User,
+    title: "Strategic Leadership",
+    description:
+      "Co-founding and directing technical teams with a focus on innovation and market-ready growth.",
   },
 ];
 
@@ -59,8 +77,9 @@ export const AboutSection = () => {
             data-animate="fade-up"
             className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300"
           >
-            A full-stack developer with a passion for building scalable,
-            user-centric products.
+            Co-Founder @ Katalyx Solutions & Senior Full-Stack Developer 
+            crafting high-performance web and mobile ecosystems with 
+            clean design and intelligent automation.
           </p>
 
           <div className="grid grid-cols-1 items-start gap-6 sm:gap-8 md:gap-10 lg:grid-cols-2">
@@ -70,17 +89,18 @@ export const AboutSection = () => {
               className="liquid-glass rounded-2xl border border-white/20 p-4 sm:p-6 md:p-8 card-lift"
             >
               <h3 className="mb-4 text-xl sm:text-2xl font-medium">
-                I&apos;m a developer crafting web and mobile products with
-                intention.
+                Designing and building digital products with a founder&apos;s mindset and a developer&apos;s precision.
               </h3>
               <p className="mb-4 text-sm sm:text-base text-gray-300">
-                I specialize in building responsive, accessible, and
-                high-performance applications using modern technologies and
-                clean system design.
+                As a Co-Founder at <span className="text-white font-medium">Katalyx Solutions</span>, 
+                I bridge the gap between architectural vision and hands-on execution. 
+                I specialize in building responsive, high-performance applications 
+                using modern frameworks and robust system design.
               </p>
               <p className="mb-6 sm:mb-8 text-sm sm:text-base text-gray-300">
-                I care deeply about thoughtful user experience, strong
-                engineering fundamentals, and delivering outcomes that scale.
+                Whether I&apos;m architecting complex backend systems or refining 
+                UI/UX interactions, I focus on delivering scalable outcomes that 
+                drive real-world impact.
               </p>
 
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
@@ -123,8 +143,8 @@ export const AboutSection = () => {
               </div>
             </div>
 
-            {/* Right cards */}
-            <div data-animate="stagger" className="grid gap-4">
+            {/* Right cards — 2 column on desktop */}
+            <div data-animate="stagger" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
               {highlights.map((item) => {
                 const Icon = item.icon;
                 return (

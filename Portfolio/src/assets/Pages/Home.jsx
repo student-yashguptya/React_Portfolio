@@ -8,6 +8,7 @@ import { SkillsSection } from "../../Components/SkillsSection";
 import { CertificationsSection } from "../../Components/CertificationsSection";
 import { ProjectSection } from "../../Components/ProjectSection";
 import { ContactSection } from "../../Components/ContactSection";
+import { CompanySection } from "../../Components/CompanySection";
 import { Footer } from "../../Components/Footer";
 import { useScrollObserver } from "../../hooks/useScrollObserver";
 
@@ -63,7 +64,11 @@ export const Home = () => {
           <AboutSection />
           <EducationSection />
           <ProfessionalSection />
-          
+        </div>
+
+        {/* Card 1.5: Company Section (Founder Role) */}
+        <div className="sticky-card bg-black">
+          <CompanySection />
         </div>
 
         {/* Card 2: Technical Skills */}

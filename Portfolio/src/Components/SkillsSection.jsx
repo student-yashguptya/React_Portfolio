@@ -9,6 +9,35 @@ import {
 } from "../lib/animations";
 
 const skills = [
+  // AI & Automation
+  { name: "OpenAI API", category: "ai" },
+  { name: "Automation", category: "ai" },
+  { name: "Intelligent Systems", category: "ai" },
+
+  // Frontend
+  { name: "React.js", category: "frontend" },
+  { name: "React Native", category: "frontend" },
+  { name: "Flutter", category: "frontend" },
+  { name: "JavaScript", category: "frontend" },
+  { name: "HTML/CSS", category: "frontend" },
+
+  // Backend & Databases
+  { name: "Node.js", category: "backend" },
+  { name: "Express", category: "backend" },
+  { name: "MongoDB", category: "database" },
+  { name: "PostgreSQL", category: "database" },
+
+  // Tools & Languages
+  { name: "Git", category: "tools" },
+  { name: "GitHub", category: "tools" },
+  { name: "Docker", category: "tools" },
+  { name: "Android Studio", category: "tools" },
+  { name: "Dart", category: "language" },
+  { name: "C", category: "language" },
+];
+
+/* OLD SKILLS:
+const skills = [
   { name: "HTML/CSS", category: "frontend" },
   { name: "JavaScript", category: "frontend" },
   { name: "React.js", category: "frontend" },
@@ -22,9 +51,40 @@ const skills = [
   { name: "Blender", category: "tools" },
   { name: "Dart", category: "language" },
   { name: "C", category: "language" },
- 
 ];
+*/
 
+const categoryColors = {
+  ai: "255, 100, 150", // Vibrant pink/magenta for AI
+  frontend: "142, 249, 252",
+  backend: "142, 252, 204",
+  database: "142, 202, 252",
+  tools: "204, 142, 252",
+  language: "252, 208, 142",
+};
+
+const skillIcons = {
+  "OpenAI API": Atom,
+  Automation: Server,
+  "Intelligent Systems": Layers,
+  "HTML/CSS": Globe,
+  JavaScript: FileCode2,
+  "React.js": Atom,
+  "React Native": Smartphone,
+  Flutter: Layers,
+  "Node.js": Server,
+  Express: Terminal,
+  MongoDB: Database,
+  PostgreSQL: Database,
+  Git: GitBranch,
+  GitHub: Github,
+  Docker: Box,
+  "Android Studio": Smartphone,
+  Blender: Box,
+  Dart: Braces,
+  C: Terminal,
+};
+/* OLD CONFIG:
 const categoryColors = {
   frontend: "142, 249, 252",
   backend: "142, 252, 204",
@@ -47,8 +107,8 @@ const skillIcons = {
   Blender: Box,
   Dart: Braces,
   C: Terminal,
-  
 };
+*/
 
 const fallbackColor = "142, 202, 252";
 const FallbackIcon = Code2;

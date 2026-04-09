@@ -93,6 +93,17 @@ export const HeroSection = () => {
         <div className="flex flex-1 flex-col justify-end px-4 pb-8 sm:px-6 md:pb-12 md:px-12 lg:px-16 lg:pb-16">
           <div className="lg:grid lg:grid-cols-2 lg:items-end gap-8">
             <div className="w-full">
+              {/* Co-Founder Badge */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.1, duration: 0.5 }}
+                className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400"
+              >
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Co-Founder @ Katalyx Solutions
+              </motion.div>
+
               <NameHeading
                 text="Yash Gupta"
                 initialDelay={200}
@@ -104,21 +115,21 @@ export const HeroSection = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6, duration: 0.8, ease: spring }}
-                  className="text-2xl font-light leading-tight sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl whitespace-nowrap"
+                  className="text-2xl font-light leading-tight sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl"
                 >
                   Building digital <Typewriter words={words} />
                 </motion.div>
               </div>
 
-              {/* Subtitle — word-level fade up */}
+              {/* Enhanced Subtitle — Founder & Developer Perspective */}
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.85, duration: 0.7, ease: spring }}
                 className="mb-6 max-w-2xl text-sm leading-relaxed text-gray-300 sm:text-base md:text-lg"
               >
-                Full-stack developer crafting modern web and Android apps with
-                clean design, smooth performance, and real-world impact.
+               Co-Founder & Lead Engineer at <a href="https://katalyxsolutions.com" target="_blank" rel="noreferrer" className="text-white underline decoration-emerald-500/50 underline-offset-4 hover:decoration-emerald-400 transition-all">Katalyx Solutions</a>, building AI-driven digital ecosystems and scalable, high-performance products. 
+              Full-Stack Developer crafting modern web and Android apps with clean design, seamless performance, and real-world impact.
               </motion.p>
 
               {/* Buttons */}
@@ -135,7 +146,7 @@ export const HeroSection = () => {
                   transition={{ duration: 0.18 }}
                   className="btn-shimmer rounded-lg bg-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-black"
                 >
-                  Start a Chat
+                  Get in Touch
                 </motion.a>
                 <motion.a
                   href="#projects"
@@ -144,7 +155,7 @@ export const HeroSection = () => {
                   transition={{ duration: 0.18 }}
                   className="btn-shimmer btn-shimmer-light liquid-glass rounded-lg border border-white/20 px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-white hover:bg-white hover:text-black transition-colors duration-300"
                 >
-                  Explore Now
+                  View My Work
                 </motion.a>
               </motion.div>
             </div>

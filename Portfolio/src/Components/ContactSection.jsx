@@ -39,7 +39,7 @@ const socials = [
   },
   {
     icon: Github,
-    href: "https://github.com/yashgupta6",
+    href: "https://github.com/student-yashguptya",
     label: "GitHub",
   },
   {
@@ -105,8 +105,17 @@ export const ContactSection = () => {
             variants={fadeUpSm}
             className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300"
           >
+            Looking to collaborate on a high-impact project or discuss digital 
+            transformation? Let&apos;s build the future together.
+          </motion.p>
+          {/* OLD SUBTITLE:
+          <motion.p
+            variants={fadeUpSm}
+            className="mx-auto mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base text-gray-300"
+          >
             Have a project in mind or want to collaborate? Let&apos;s connect.
           </motion.p>
+          */}
 
           <div className="grid grid-cols-1 gap-6 sm:gap-8 lg:grid-cols-2">
             {/* Contact info */}
@@ -158,7 +167,9 @@ export const ContactSection = () => {
                         <span />
                         <span />
                         <a href={href} target="_blank" rel="noreferrer" aria-label={label}>
-                          <Icon className="svg" />
+                          <div className="svg">
+                            <Icon size={24} />
+                          </div>
                         </a>
                         <div className="text">{label}</div>
                       </li>
@@ -273,6 +284,7 @@ const StyledWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: visible;
   }
 
   .iso-pro a {
@@ -282,15 +294,18 @@ const StyledWrapper = styled.div`
     width: 100%;
     height: 100%;
     z-index: 10;
+    overflow: visible;
   }
 
   .svg {
     transition: all 0.3s;
-    padding: 1rem;
     height: 60px;
     width: 60px;
     border-radius: 100%;
     color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     /* Adhering to the theme: glass effect instead of orange */
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.2);
