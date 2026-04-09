@@ -59,11 +59,11 @@ export const Home = () => {
         </div>
 
         {/* Card 1: About, Education, Professional, Achievements */}
-        <div className="sticky-card bg-black">
+        <div className="sticky-card about-card bg-black">
           <AboutSection />
           <EducationSection />
           <ProfessionalSection />
-          <AchievementsSection />
+          
         </div>
 
         {/* Card 2: Technical Skills */}
@@ -78,7 +78,12 @@ export const Home = () => {
 
         {/* Card 4: Certifications & Contact */}
         <div className="sticky-card bg-black">
+          <AchievementsSection />
           <CertificationsSection />
+         </div>
+
+        {/* Card 5: Certifications & Contact */}
+        <div className="sticky-card bg-black">
           <ContactSection />
         </div>
       </div>

@@ -16,14 +16,13 @@ const skills = [
   { name: "Flutter", category: "frontend" },
   { name: "Node.js", category: "backend" },
   { name: "MongoDB", category: "database" },
-  { name: "SQL", category: "database" },
   { name: "Git", category: "tools" },
   { name: "GitHub", category: "tools" },
   { name: "Android Studio", category: "tools" },
   { name: "Blender", category: "tools" },
   { name: "Dart", category: "language" },
   { name: "C", category: "language" },
-  { name: "Java", category: "language" },
+ 
 ];
 
 const categoryColors = {
@@ -42,14 +41,13 @@ const skillIcons = {
   Flutter: Layers,
   "Node.js": Server,
   MongoDB: Database,
-  SQL: Database,
   Git: GitBranch,
   GitHub: Github,
   "Android Studio": Smartphone,
   Blender: Box,
   Dart: Braces,
   C: Terminal,
-  Java: Coffee,
+  
 };
 
 const fallbackColor = "142, 202, 252";

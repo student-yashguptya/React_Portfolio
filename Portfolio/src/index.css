@@ -470,9 +470,11 @@ select:focus {
   will-change: transform;
 }
 
-.sticky-stack-container .sticky-card:not(:first-child) {
-  border-top-left-radius: 32px;
-  border-top-right-radius: 32px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 -24px 64px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
+/* ONLY About Section card gets a deep, beautifully uniform curved top */
+.about-card {
+  border-top-left-radius: 100px;
+  border-top-right-radius: 100px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08); /* Optional premium touch */
+  box-shadow: 0 -24px 64px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
