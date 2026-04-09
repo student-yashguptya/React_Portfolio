@@ -1,37 +1,38 @@
-import { Suspense, lazy, useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Loader from "./Components/Loader";
+import { Suspense, lazy, useState, useEffect } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Loader from './Components/Loader';
+import { LottieCharacter } from './Components/LottieCharacter';
 
-const Home = lazy(() => import("./assets/Pages/Home").then(module => ({ default: module.Home })));
-const NotFound = lazy(() => import("./assets/Pages/NotFound").then(module => ({ default: module.NotFound })));
+const Home     = lazy(() => import('./assets/Pages/Home').then(m => ({ default: m.Home })));
+const NotFound = lazy(() => import('./assets/Pages/NotFound').then(m => ({ default: m.NotFound })));
+
+const LOADER_DURATION = 3000;
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading,  setIsLoading]  = useState(true);
+  const [loaderDone, setLoaderDone] = useState(false);
 
   useEffect(() => {
-    // Ensure the loader stays for at least 3 seconds
-    const timer = setTimeout(() => {
+    const t1 = setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
+      const t2 = setTimeout(() => setLoaderDone(true), 120);
+      return () => clearTimeout(t2);
+    }, LOADER_DURATION);
+    return () => clearTimeout(t1);
   }, []);
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  if (isLoading) return <Loader />;
 
   return (
-    <>
-      <BrowserRouter>
-        <Suspense fallback={<Loader />}>
-          <Routes>
-            <Route index element={<Home />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+      <LottieCharacter loaderDone={loaderDone} />
+    </BrowserRouter>
   );
 }
 

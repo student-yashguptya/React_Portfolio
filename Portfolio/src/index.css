@@ -472,9 +472,17 @@ select:focus {
 
 /* ONLY About Section card gets a deep, beautifully uniform curved top */
 .about-card {
-  border-top-left-radius: 100px;
-  border-top-right-radius: 100px;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
   border-top: 1px solid rgba(255, 255, 255, 0.08); /* Optional premium touch */
   box-shadow: 0 -24px 64px rgba(0, 0, 0, 0.7);
   overflow: hidden;
 }
+
+@media (min-width: 1024px) {
+  .about-card {
+    border-top-left-radius: 100px;
+    border-top-right-radius: 100px;
+  }
+}
+
