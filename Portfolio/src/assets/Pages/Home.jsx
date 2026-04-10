@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { HeroSection } from "../../Components/HeroSection";
+import { HeroSection } from "../../Components/  herosection";
 import { AboutSection } from "../../Components/aboutsection";
 import { EducationSection } from "../../Components/EducationSection";
 import { ProfessionalSection } from "../../Components/professionalsection";
