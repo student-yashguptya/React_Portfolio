@@ -1,15 +1,15 @@
 import { useEffect, useRef } from "react";
 import { HeroSection } from "../../Components/HeroSection";
-import { AboutSection } from "../../Components/AboutSection";
+import { AboutSection } from "../../Components/aboutsection";
 import { EducationSection } from "../../Components/EducationSection";
-import { ProfessionalSection } from "../../Components/ProfessionalSection";
-import { AchievementsSection } from "../../Components/AchievementsSection";
-import { SkillsSection } from "../../Components/SkillsSection";
-import { CertificationsSection } from "../../Components/CertificationsSection";
-import { ProjectSection } from "../../Components/ProjectSection";
-import { ContactSection } from "../../Components/ContactSection";
-import { CompanySection } from "../../Components/CompanySection";
-import { Footer } from "../../Components/Footer";
+import { ProfessionalSection } from "../../Components/professionalsection";
+import { AchievementsSection } from "../../Components/achievementssection";
+import { SkillsSection } from "../../Components/skillssection";
+import { CertificationsSection } from "../../Components/certificationssection";
+import { ProjectSection } from "../../Components/projectsection";
+import { ContactSection } from "../../Components/contactsection";
+import { CompanySection } from "../../Components/companysection";
+import { Footer } from "../../Components/footer";
 import { useScrollObserver } from "../../hooks/useScrollObserver";
 import { GlowingTubeAnimation } from "../../Components/GlowingTubeAnimation";
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavBar } from "./NavBar";
+import { NavBar } from "./navbar";
 import { motion } from "framer-motion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react"; // ✅ NEW
 
