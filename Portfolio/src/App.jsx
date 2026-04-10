@@ -23,9 +23,6 @@ function App() {
     return () => clearTimeout(t1);
   }, []);
 
-  // OLD: if (isLoading) return <Loader />;
-  // if (isLoading) return <Loader />;
-
   return (
     <BrowserRouter>
       {isLoading && (
