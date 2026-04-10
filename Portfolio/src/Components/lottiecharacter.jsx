@@ -6,7 +6,7 @@
 
 import { motion } from 'framer-motion';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { useLottieCharacter, getSize, FLOOR_GAP } from '../lib/useLottieCharacter';
+import { useLottieCharacter, getSize, FLOOR_GAP } from '../lib/uselottiecharacter';
 
 const LOTTIE_SRC =
   'https://lottie.host/3d7dc9d6-527e-48fc-98ff-710c84840c77/f4RnnXkikm.lottie';

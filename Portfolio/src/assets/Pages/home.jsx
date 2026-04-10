@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { HeroSection } from "../../Components/herosection";
 import { AboutSection } from "../../Components/aboutsection";
-import { EducationSection } from "../../Components/EducationSection";
+import { EducationSection } from "../../Components/educationsection";
 import { ProfessionalSection } from "../../Components/professionalsection";
 import { AchievementsSection } from "../../Components/achievementssection";
 import { SkillsSection } from "../../Components/skillssection";
@@ -10,8 +10,8 @@ import { ProjectSection } from "../../Components/projectsection";
 import { ContactSection } from "../../Components/contactsection";
 import { CompanySection } from "../../Components/companysection";
 import { Footer } from "../../Components/footer";
-import { useScrollObserver } from "../../hooks/useScrollObserver";
-import { GlowingTubeAnimation } from "../../Components/GlowingTubeAnimation";
+import { useScrollObserver } from "../../hooks/usescrollobserver";
+import { GlowingTubeAnimation } from "../../Components/glowingtubeanimation";
 
 export const Home = () => {
   useScrollObserver();

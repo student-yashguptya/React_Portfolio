@@ -1,12 +1,12 @@
 import { Suspense, lazy, useState, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Loader from './Components/Loader';
-import { LottieCharacter } from './Components/Lottiecharacter';
-import { LoaderCharacter } from './Components/LoaderCharacter';
-import CustomCursor from './Components/CustomCursor';
+import Loader from './Components/loader';
+import { LottieCharacter } from './Components/lottiecharacter';
+import { LoaderCharacter } from './Components/loadercharacter';
+import CustomCursor from './Components/customcursor';
 
-const Home     = lazy(() => import('./assets/Pages/Home').then(m => ({ default: m.Home })));
-const NotFound = lazy(() => import('./assets/Pages/NotFound').then(m => ({ default: m.NotFound })));
+const Home     = lazy(() => import('./assets/Pages/home').then(m => ({ default: m.Home })));
+const NotFound = lazy(() => import('./assets/Pages/notfound').then(m => ({ default: m.NotFound })));
 
 const LOADER_DURATION = 4500;
 
