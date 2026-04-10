@@ -22,8 +22,9 @@ export const LoaderCharacter = ({ isLoading }) => {
       const isMobile = W < 640;
       const centerY = H / 2;
       
-      const charSize = isMobile ? 104 : 150;
-      const charHalf = charSize / 2;
+      const charHeight = isMobile ? 104 : 150;
+      const charWidth = isMobile ? 180 : 260; 
+      const charHalf = charHeight / 2;
       
       const arcRadius = isMobile ? 122 : 195; 
       const startXOffset = isMobile ? 10 : 15;
@@ -40,8 +41,8 @@ export const LoaderCharacter = ({ isLoading }) => {
         y: -H * 0.4, // Fall from 40% above the screen
         x: `calc(-50% + ${startXOffset}px)`, 
         opacity: 0,
-        width: charSize,
-        height: charSize,
+        width: charWidth,
+        height: charHeight,
         scale: 1
       });
 
@@ -98,7 +99,7 @@ export const LoaderCharacter = ({ isLoading }) => {
       });
 
       // 5. EXIT RUN TO RIGHT (Smoothly off-screen)
-      const finalXPos = (W / 2) + charSize + 100;
+      const finalXPos = (W / 2) + charWidth + 100;
       
       await controls.start({
         x: finalXPos,
