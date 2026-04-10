@@ -6,7 +6,7 @@ import {
   Instagram, Linkedin, Mail, MapPin, Phone, Send, Github,
 } from "lucide-react";
 import {
-  staggerContainer, fadeUp, fadeUpSm, headingReveal, dividerReveal,
+  staggerContainer, fadeUpSm, headingReveal, dividerReveal,
   slideFromLeft, slideFromRight,
 } from "../lib/animations";
 

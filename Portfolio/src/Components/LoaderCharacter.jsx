@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
@@ -9,7 +9,7 @@ export const LoaderCharacter = ({ isLoading }) => {
   const controls = useAnimation();
   const ref = useRef(null);
 
-  const [phase, setPhase] = useState("LOADER_PHASE");
+
 
   useEffect(() => {
     if (!isLoading) return;
@@ -22,7 +22,7 @@ export const LoaderCharacter = ({ isLoading }) => {
       // Responsive sizing
       const charSize = isMobile ? 104 : 150;
       const charHalf = charSize / 2;
-      const loaderRadius = isMobile ? 100 : 160;
+
       
       const arcRadius = isMobile ? 122 : 195; 
       const startXOffset = isMobile ? 10 : 15;
@@ -40,8 +40,6 @@ export const LoaderCharacter = ({ isLoading }) => {
         height: charSize
       });
 
-      setPhase("FALLING_TO_LOADER");
-
       // 1. FALL TO LOADER TOP
       await controls.start({
         y: collisionY,
@@ -55,7 +53,6 @@ export const LoaderCharacter = ({ isLoading }) => {
       });
 
       // 2. COLLISION & SLIDE
-      setPhase("SLIDING_BOUNDARY");
       await controls.start({
         x: [
           `calc(-50% + ${startXOffset}px)`, 
@@ -71,14 +68,12 @@ export const LoaderCharacter = ({ isLoading }) => {
       });
 
       // 3. FALL TO FLOOR
-      setPhase("FALLING_TO_FLOOR");
       await controls.start({
         y: floorY,
         transition: { type: "spring", stiffness: 100, damping: 15, mass: 2.0 }
       });
 
       // 4. SETTLE & BOUNCE (Very snappy)
-      setPhase("SETTLED");
       await controls.start({
         scaleY: [1, 0.8, 1],
         scaleX: [1, 1.2, 1],
@@ -87,7 +82,6 @@ export const LoaderCharacter = ({ isLoading }) => {
 
 
       // 5. EXIT RUN TO RIGHT (Absolute off-screen)
-      setPhase("EXIT_RUN");
       const finalX = (window.innerWidth / 2) + charSize;
       
       await controls.start({

@@ -1,14 +1,5 @@
 import { Briefcase, Code, User, Sparkles, Layers, Target } from "lucide-react";
 import { motion } from "framer-motion";
-import {
-  staggerContainer,
-  fadeUp,
-  fadeUpSm,
-  headingReveal,
-  dividerReveal,
-  slideFromLeft,
-  slideFromRight,
-} from "../lib/animations";
 
 const highlights = [
   {

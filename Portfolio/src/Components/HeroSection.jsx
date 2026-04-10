@@ -7,7 +7,6 @@ const VIDEO_URL =
   "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260403_050628_c4e32401-fab4-4a27-b7a8-6e9291cd5959.mp4";
 
 const spring = [0.16, 1, 0.3, 1];
-const smooth = [0.33, 1, 0.68, 1];
 
 /* ========================= */
 /* TYPEWRITER COMPONENT */
