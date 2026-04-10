@@ -90,7 +90,7 @@ export const HeroSection = () => {
     >
       {/* 🎥 VIDEO BACKGROUND */}
       <video
-        className="absolute inset-0 h-full w-full object-cover z-0"
+        className="absolute inset-0 h-full w-full object-cover z-0 scale-[1.01] border-none outline-none"
         src={VIDEO_URL}
         autoPlay
         loop
