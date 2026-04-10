@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HeroSection } from "../../Components/HeroSection";
 import { AboutSection } from "../../Components/AboutSection";
 import { EducationSection } from "../../Components/EducationSection";
@@ -11,12 +11,14 @@ import { ContactSection } from "../../Components/ContactSection";
 import { CompanySection } from "../../Components/CompanySection";
 import { Footer } from "../../Components/Footer";
 import { useScrollObserver } from "../../hooks/useScrollObserver";
+import { GlowingTubeAnimation } from "../../Components/GlowingTubeAnimation";
 
 export const Home = () => {
   useScrollObserver();
 
+  const heroRef = useRef(null);
+
   // Dynamically calculate the top offset for stacked cards
-  // so that tall cards scroll completely before sticking.
   useEffect(() => {
     const updateStickyTops = () => {
       const cards = document.querySelectorAll('.sticky-card');
@@ -24,10 +26,8 @@ export const Home = () => {
       cards.forEach(card => {
         const height = card.getBoundingClientRect().height;
         if (height > winH) {
-          // If card is taller than screen, pin it such that its bottom aligns with screen bottom
           card.style.top = `-${height - winH}px`;
         } else {
-          // If card is shorter/equal, pin it nicely at the top
           card.style.top = '0px';
         }
       });
@@ -50,16 +50,35 @@ export const Home = () => {
     };
   }, []);
 
+
+
   return (
     <div className="bg-black text-white font-sans overflow-clip">
-      
-      <div className="sticky-stack-container">
+
+      <div className="sticky-stack-container" style={{ position: "relative" }}>
+        {/* Absolute wrapper starting exactly below the Hero (100vh) */}
+        <div style={{
+          position: "absolute",
+          top: "100vh",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          pointerEvents: "none",
+          zIndex: 50,
+          mixBlendMode: "difference" // Restores the automatic text contrast inversion!
+        }}>
+          <GlowingTubeAnimation />
+        </div>
+
         {/* Hero Section Card */}
-        <div className="sticky-card bg-black">
+        <div
+          ref={heroRef}
+          className="sticky-card bg-black"
+        >
           <HeroSection />
         </div>
 
-        {/* Card 1: About, Education, Professional, Achievements */}
+        {/* Card 1: About, Education, Professional */}
         <div className="sticky-card about-card bg-black">
           <AboutSection />
           <EducationSection />
@@ -76,18 +95,18 @@ export const Home = () => {
           <SkillsSection />
         </div>
 
-        {/* Card 3: Feature Cards (Projects) */}
+        {/* Card 3: Projects */}
         <div className="sticky-card bg-black">
           <ProjectSection />
         </div>
 
-        {/* Card 4: Certifications & Contact */}
+        {/* Card 4: Achievements & Certifications */}
         <div className="sticky-card bg-black">
           <AchievementsSection />
           <CertificationsSection />
-         </div>
+        </div>
 
-        {/* Card 5: Certifications & Contact */}
+        {/* Card 5: Contact */}
         <div className="sticky-card bg-black">
           <ContactSection />
         </div>
