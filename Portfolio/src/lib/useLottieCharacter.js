@@ -45,8 +45,13 @@ export const getSize   = () =>
     ? SIZE_MOBILE
     : SIZE_DESKTOP;
 
-export const getRightX = () => window.innerWidth  - getSize() - FLOOR_GAP;
-export const getLeftX  = () => FLOOR_GAP;
+export const getRightX = () => {
+  const sz = getSize();
+  const gap = window.innerWidth < 640 ? 16 : FLOOR_GAP;
+  return window.innerWidth - sz - gap;
+};
+
+export const getLeftX = () => (window.innerWidth < 640 ? 16 : FLOOR_GAP);
 export const getAboveY = () => -(window.innerHeight + getSize() + 80);
 export const getRiseY  = () => -(window.innerHeight * 0.44);
 export const getJumpY  = () => -(window.innerHeight * 0.83);
@@ -79,7 +84,9 @@ export function useLottieCharacter(loaderDone) {
 
   const [initX] = useState(() => {
     if (typeof window === 'undefined') return 0;
-    return window.innerWidth - getSize() - FLOOR_GAP;
+    const sz = getSize();
+    const gap = window.innerWidth < 640 ? 16 : FLOOR_GAP;
+    return window.innerWidth - sz - gap;
   });
   const [initY] = useState(() => {
     if (typeof window === 'undefined') return -1200;

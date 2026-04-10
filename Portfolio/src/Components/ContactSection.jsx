@@ -243,10 +243,7 @@ export const ContactSection = () => {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  whileHover={!isSubmitting ? { scale: 1.02 } : {}}
-                  whileTap={!isSubmitting ? { scale: 0.97 } : {}}
-                  transition={{ duration: 0.18 }}
-                  className={`btn-shimmer inline-flex w-full items-center justify-center gap-2 rounded-lg bg-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-black ${
+                  className={`btn-shimmer btn-premium bg-white w-full flex items-center justify-center gap-2 px-10 py-4 text-sm font-medium text-black ${
                     isSubmitting ? "opacity-70 cursor-not-allowed" : ""
                   }`}
                 >

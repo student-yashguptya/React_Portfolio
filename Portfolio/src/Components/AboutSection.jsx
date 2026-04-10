@@ -106,10 +106,7 @@ export const AboutSection = () => {
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
                 <motion.a
                   href="#contact"
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
-                  transition={{ duration: 0.18 }}
-                  className="btn-shimmer rounded-lg bg-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-black text-center"
+                  className="btn-shimmer btn-premium inline-flex bg-white px-8 py-3.5 text-sm font-medium text-black text-center"
                 >
                   Start a Chat
                 </motion.a>
@@ -117,10 +114,7 @@ export const AboutSection = () => {
                   href="/Documents/Resume.pdf"
                   target="_blank"
                   rel="noreferrer"
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
-                  transition={{ duration: 0.18 }}
-                  className="btn-shimmer btn-shimmer-light liquid-glass rounded-lg border border-white/20 px-6 sm:px-8 py-2.5 sm:py-3 text-sm font-medium text-white hover:bg-white hover:text-black transition-colors duration-300 text-center"
+                  className="btn-shimmer btn-shimmer-light btn-premium btn-premium-outline inline-flex liquid-glass border border-white/20 px-8 py-3.5 text-sm font-medium text-white text-center"
                 >
                   Download Resume
                 </motion.a>

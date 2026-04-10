@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Loader from './Components/Loader';
 import { LottieCharacter } from './Components/Lottiecharacter';
 import { LoaderCharacter } from './Components/LoaderCharacter';
+import CustomCursor from './Components/CustomCursor';
 
 const Home     = lazy(() => import('./assets/Pages/Home').then(m => ({ default: m.Home })));
 const NotFound = lazy(() => import('./assets/Pages/NotFound').then(m => ({ default: m.NotFound })));
@@ -40,6 +41,7 @@ function App() {
         </Routes>
       </Suspense>
       <LottieCharacter loaderDone={loaderDone} />
+      <CustomCursor />
     </BrowserRouter>
   );
 }

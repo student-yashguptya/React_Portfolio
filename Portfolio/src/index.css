@@ -9,6 +9,12 @@ body {
   color: #fff;
 }
 
+@media (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
+}
+
 #root {
   max-width: 100%;
   margin: 0 auto;
@@ -82,6 +88,39 @@ body {
     rgba(255, 255, 255, 0.08) 50%,
     transparent 80%
   );
+}
+
+/* ─── Premium Button Utility ─────────────────────────────────────── */
+.btn-premium {
+  /* display property handled by Tailwind utility classes (flex/inline-flex) 
+     to ensure responsive visibility (hidden) works correctly */
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+  position: relative;
+  text-decoration: none;
+}
+
+.btn-premium:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+}
+
+.btn-premium:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.btn-premium-outline {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  background-color: transparent !important;
+  backdrop-filter: blur(8px);
+}
+
+.btn-premium-outline:hover {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
 /* ─── Input glow on focus ───────────────────────────────────────── */

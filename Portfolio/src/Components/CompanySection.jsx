@@ -85,9 +85,7 @@ export const CompanySection = () => {
                   href="https://katalyxsolutions.com"
                   target="_blank"
                   rel="noreferrer"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="btn-shimmer inline-flex items-center gap-3 rounded-xl bg-white px-8 py-4 text-sm font-medium text-black shadow-2xl shadow-emerald-500/10"
+                  className="btn-shimmer btn-premium bg-white inline-flex items-center justify-center gap-2 px-10 py-4 text-sm font-medium text-black shadow-2xl shadow-emerald-500/10"
                 >
                   Visit Company Website <ExternalLink size={18} />
                 </motion.a>

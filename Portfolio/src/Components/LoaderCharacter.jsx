@@ -15,22 +15,30 @@ export const LoaderCharacter = ({ isLoading }) => {
     if (!isLoading) return;
 
     const runLoaderSequence = async () => {
+      const isMobile = window.innerWidth < 640;
       const vh = window.innerHeight / 100;
       const centerY = 50 * vh;
       
-      const charSize = 150;
+      // Responsive sizing
+      const charSize = isMobile ? 104 : 150;
       const charHalf = charSize / 2;
-      const loaderRadius = 160;
+      const loaderRadius = isMobile ? 100 : 160;
       
-      const arcRadius = 195; 
-      const startXOffset = 15;
+      const arcRadius = isMobile ? 122 : 195; 
+      const startXOffset = isMobile ? 10 : 15;
       
       const startYOffset = -Math.sqrt(Math.pow(arcRadius, 2) - Math.pow(startXOffset, 2));
       const collisionY = centerY + startYOffset - charHalf;
-      const floorY = (100 * vh) - (20 + 50) - charHalf; 
+      const floorY = (100 * vh) - (20 + (isMobile ? 30 : 50)) - charHalf; 
 
       // Initialize position above screen slightly offset to right
-      controls.set({ y: "-30vh", x: `calc(-50% + ${startXOffset}px)`, opacity: 1 });
+      controls.set({ 
+        y: "-30vh", 
+        x: `calc(-50% + ${startXOffset}px)`, 
+        opacity: 1,
+        width: charSize,
+        height: charSize
+      });
 
       setPhase("FALLING_TO_LOADER");
 
@@ -80,8 +88,6 @@ export const LoaderCharacter = ({ isLoading }) => {
 
       // 5. EXIT RUN TO RIGHT (Absolute off-screen)
       setPhase("EXIT_RUN");
-      // Calculate from the 50% left position. 
-      // To reach window.innerWidth from window.innerWidth/2, we need +window.innerWidth/2 + charSize
       const finalX = (window.innerWidth / 2) + charSize;
       
       await controls.start({
@@ -110,8 +116,7 @@ export const LoaderCharacter = ({ isLoading }) => {
       style={{
         top: 0,
         left: "50%",
-        width: "150px",
-        height: "150px"
+        /* Width and height are handled by controls.set/start */
       }}
     >
       <DotLottieReact

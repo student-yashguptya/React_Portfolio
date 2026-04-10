@@ -124,12 +124,12 @@ export const HeroSection = () => {
       </div>
 
       {/* ========================= */}
-      {/* 🎯 CONTENT (UNCHANGED) */}
+      {/* 🎯 CONTENT */}
       {/* ========================= */}
       <div className="relative z-10 flex min-h-screen flex-col">
         <NavBar />
 
-        <div className="flex flex-1 flex-col justify-end px-4 pb-8 sm:px-6 md:pb-12 md:px-12 lg:px-16 lg:pb-16">
+        <div className="flex flex-1 flex-col justify-end px-5 pb-10 sm:px-8 md:pb-12 md:px-12 lg:px-16 lg:pb-16">
           <div className="lg:grid lg:grid-cols-2 lg:items-end gap-8">
             <div className="w-full">
               {/* Badge */}
@@ -137,7 +137,7 @@ export const HeroSection = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1, duration: 0.5 }}
-                className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400"
+                className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[10px] sm:text-xs font-medium text-emerald-400"
               >
                 <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 Co-Founder @ Katalyx Solutions
@@ -146,7 +146,7 @@ export const HeroSection = () => {
               <NameHeading
                 text="Yash Gupta"
                 initialDelay={200}
-                className="mb-1 text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl"
+                className="mb-1 text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-7xl"
               />
 
               <div className="mb-4 overflow-hidden">
@@ -154,7 +154,7 @@ export const HeroSection = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6, duration: 0.8, ease: spring }}
-                  className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl"
+                  className="text-xl sm:text-2xl md:text-4xl lg:text-4xl xl:text-5xl"
                 >
                   Building digital <Typewriter words={words} />
                 </motion.div>
@@ -164,14 +164,14 @@ export const HeroSection = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.85, duration: 0.7, ease: spring }}
-                className="mb-6 max-w-2xl text-sm text-gray-300 sm:text-base md:text-lg"
+                className="mb-8 max-w-2xl text-[13px] leading-relaxed text-gray-300 sm:text-base md:text-lg"
               >
                 Co-Founder & Lead Engineer at{" "}
                 <a
                   href="https://katalyxsolutions.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-white underline decoration-emerald-500/50 underline-offset-4 hover:decoration-emerald-400 transition-all"
+                  className="text-white underline decoration-emerald-500/50 underline-offset-4 hover:decoration-emerald-400 transition-all font-medium"
                 >
                   Katalyx Solutions
                 </a>
@@ -181,25 +181,25 @@ export const HeroSection = () => {
                 and real-world impact.
               </motion.p>
 
-              <motion.div className="flex flex-wrap gap-3 sm:gap-4">
+              <motion.div className="flex items-center gap-2.5 sm:gap-4">
                 <a
                   href="#contact"
-                  className="rounded-lg bg-white px-6 py-3 text-sm font-medium text-black"
+                  className="btn-shimmer btn-premium inline-flex bg-white px-5 sm:px-8 py-3 sm:py-3.5 text-xs sm:text-sm font-medium text-black whitespace-nowrap"
                 >
                   Get in Touch
                 </a>
                 <a
                   href="#projects"
-                  className="rounded-lg border border-white/20 px-6 py-3 text-sm text-white"
+                  className="btn-shimmer btn-premium btn-premium-outline inline-flex border border-white/20 px-5 sm:px-8 py-3 sm:py-3.5 text-xs sm:text-sm text-white whitespace-nowrap"
                 >
                   View My Work
                 </a>
               </motion.div>
             </div>
 
-            <div className="mt-8 lg:mt-0 lg:flex lg:justify-end">
-              <div className="rounded-xl border border-white/20 px-6 py-3">
-                <p className="text-lg md:text-xl lg:text-2xl">
+            <div className="mt-10 lg:mt-0 lg:flex lg:justify-end">
+              <div className="rounded-full border border-white/20 px-5 py-2.5 sm:px-8 sm:py-4 backdrop-blur-md">
+                <p className="text-sm sm:text-lg md:text-xl lg:text-2xl font-medium tracking-tight">
                   Web. Mobile. Problem Solving.
                 </p>
               </div>

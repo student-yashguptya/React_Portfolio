@@ -53,7 +53,7 @@ export const Footer = () => {
             </div>
             <a 
               href="mailto:gyash6328@gmail.com" 
-              className="text-xs text-gray-400 hover:text-white transition-colors duration-300 flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/5 bg-white/5"
+              className="btn-premium btn-premium-outline text-xs text-gray-400 hover:text-white transition-colors duration-300 flex items-center gap-2 px-6 py-2.5 rounded-full border border-white/10 bg-white/5"
             >
               <Mail size={14} className="text-emerald-400" />
               gyash6328@gmail.com

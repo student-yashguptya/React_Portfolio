@@ -39,15 +39,24 @@ const StyledWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 320px; /* Increased to fit "Portfolio Loading" */
-    height: 320px; /* Increased to fit "Portfolio Loading" */
+    --loader-size: 320px;
+    width: var(--loader-size);
+    height: var(--loader-size);
     font-family: "Inter", sans-serif;
-    font-size: 1.2em;
+    font-size: 1.25rem;
     font-weight: 300;
     color: white;
     border-radius: 50%;
     background-color: transparent;
     user-select: none;
+    transition: all 0.3s ease;
+  }
+
+  @media (max-width: 640px) {
+    .loader-wrapper {
+      --loader-size: 200px;
+      font-size: 0.9rem;
+    }
   }
 
   .loader {
