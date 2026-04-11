@@ -23,8 +23,8 @@ const PARAMS = {
   lerp: 0.1,         // How fast tubes follow
   noise: 28.0,       // Slightly increased spread
   historySize: 100,   // Increased from 50 for longer tubes
-  tubesPerColor: 2,  // 3 tubes for each color
-  ballsPerTube: 5,  // Increased further to cover the entire length
+  tubesPerColor: 3,  // 3 tubes for each color
+  ballsPerTube: 10,  // Increased further to cover the entire length
   tubeRadius: 1.5,   // Thinned slightly for density
   tubeSegments: 64,
   tubeRadSegments: 6,
@@ -204,6 +204,22 @@ export const GlowingTubeAnimation = () => {
     window.addEventListener("touchmove", updatePointer, { passive: true });
     window.addEventListener("touchstart", updatePointer, { passive: true });
 
+    // ─── Scroll Visibility Handling ────────────────────────────────────────────
+    const checkVisibility = () => {
+      const scrollY = window.scrollY;
+      const threshold = isMobile ? window.innerHeight * 0.7 : window.innerHeight * 0.4;
+      
+      if (scrollY < threshold) {
+        container.style.opacity = "0";
+        container.style.visibility = "hidden";
+      } else {
+        container.style.opacity = "1";
+        container.style.visibility = "visible";
+      }
+    };
+    window.addEventListener("scroll", checkVisibility);
+    checkVisibility(); // Initial check
+
     // ─── Resize Handling ───────────────────────────────────────────────────────
     const onResize = () => {
       W = window.innerWidth;
@@ -231,13 +247,13 @@ export const GlowingTubeAnimation = () => {
 
       // Map Sleep Mode Infinity Curve
       if (!isActive) {
-        // Tightened mobile radii to keep animation centered within cards
-        const radiusX = vw * (isMobile ? 0.32 : 0.35); 
-        const radiusY = vh * (isMobile ? 0.12 : 0.25); 
+        // Further tightened mobile radii to keep animation centered within cards
+        const radiusX = vw * (isMobile ? 0.28 : 0.35); 
+        const radiusY = vh * (isMobile ? 0.10 : 0.25); 
         
         target.x = Math.cos(t * PARAMS.sleepTimeScale1) * radiusX;
         target.y = Math.sin(t * PARAMS.sleepTimeScale2) * radiusY;
-        target.z = Math.sin(t * 0.5) * (isMobile ? 20 : 50); // Reduced depth variance on mobile
+        target.z = Math.sin(t * 0.5) * (isMobile ? 15 : 50); // Minimal depth on mobile
       }
 
       // Dynamic physical radius so it looks identically elegant on desktop and mobile
@@ -312,6 +328,7 @@ export const GlowingTubeAnimation = () => {
       window.removeEventListener("touchmove", updatePointer);
       window.removeEventListener("touchstart", updatePointer);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("scroll", checkVisibility);
       clearTimeout(sleepTimer);
 
       tubes.forEach((tube) => {
@@ -350,6 +367,7 @@ export const GlowingTubeAnimation = () => {
         WebkitBackfaceVisibility: "hidden", // Performance optimizations for mobile browsers
         backfaceVisibility: "hidden",
         transform: "translate3d(0, 0, 0)",
+        transition: "opacity 0.8s ease, visibility 0.8s ease", // Smooth fade in/out
       }}
     />
   );
