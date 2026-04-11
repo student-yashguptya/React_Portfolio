@@ -204,21 +204,8 @@ export const GlowingTubeAnimation = () => {
     window.addEventListener("touchmove", updatePointer, { passive: true });
     window.addEventListener("touchstart", updatePointer, { passive: true });
 
-    // ─── Scroll Visibility Handling ────────────────────────────────────────────
-    const checkVisibility = () => {
-      const scrollY = window.scrollY;
-      const threshold = isMobile ? window.innerHeight * 0.7 : window.innerHeight * 0.4;
-      
-      if (scrollY < threshold) {
-        container.style.opacity = "0";
-        container.style.visibility = "hidden";
-      } else {
-        container.style.opacity = "1";
-        container.style.visibility = "visible";
-      }
-    };
-    window.addEventListener("scroll", checkVisibility);
-    checkVisibility(); // Initial check
+    window.addEventListener("touchmove", updatePointer, { passive: true });
+    window.addEventListener("touchstart", updatePointer, { passive: true });
 
     // ─── Resize Handling ───────────────────────────────────────────────────────
     const onResize = () => {
@@ -328,7 +315,6 @@ export const GlowingTubeAnimation = () => {
       window.removeEventListener("touchmove", updatePointer);
       window.removeEventListener("touchstart", updatePointer);
       window.removeEventListener("resize", onResize);
-      window.removeEventListener("scroll", checkVisibility);
       clearTimeout(sleepTimer);
 
       tubes.forEach((tube) => {
@@ -367,7 +353,7 @@ export const GlowingTubeAnimation = () => {
         WebkitBackfaceVisibility: "hidden", // Performance optimizations for mobile browsers
         backfaceVisibility: "hidden",
         transform: "translate3d(0, 0, 0)",
-        transition: "opacity 0.8s ease, visibility 0.8s ease", // Smooth fade in/out
+        opacity: 1,
       }}
     />
   );

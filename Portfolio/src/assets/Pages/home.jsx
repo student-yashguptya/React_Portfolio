@@ -70,10 +70,10 @@ export const Home = () => {
           <GlowingTubeAnimation />
         </div>
 
-        {/* Hero Section Card */}
+        {/* Hero Section Card - Higher z-index to cover animation */}
         <div
           ref={heroRef}
-          className="sticky-card bg-black"
+          className="sticky-card bg-black relative z-[60]"
         >
           <HeroSection />
         </div>
