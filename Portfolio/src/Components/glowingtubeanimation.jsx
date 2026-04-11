@@ -4,7 +4,6 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 
-// ─── Custom Pseudo-Noise ──────────────────────────────────────────────────────
 function pseudoNoise(t, i) {
   return new THREE.Vector3(
     Math.sin(t * 1.5 + i * 1.1) * Math.cos(t * 0.8 + i * 0.3),
@@ -13,9 +12,8 @@ function pseudoNoise(t, i) {
   );
 }
 
-// ─── Configuration ────────────────────────────────────────────────────────────
 const PARAMS = {
-  bloomThreshold: 0.05,   // Lower threshold = glow kicks in earlier on all devices
+  bloomThreshold: 0.05,
   bloomStrength: 1.4,
   bloomRadius: 0.9,
   metalness: 0.9,
@@ -35,41 +33,13 @@ const PARAMS = {
     0xffaa00, // Gold
     0x00ff88, // Bright Green
   ],
-  lightColors: [0xffffff, 0xffffff, 0xffffff, 0xffffff],
   lightIntensity: 1.2,
   sleepTimeScale1: 0.8,
   sleepTimeScale2: 1.6,
 };
 
-// ─── Detect Android ───────────────────────────────────────────────────────────
 function isAndroid() {
   return /android/i.test(navigator.userAgent);
-}
-
-// ─── Check GPU float texture support ─────────────────────────────────────────
-// Returns the best available THREE texture type for render targets.
-function getBestRenderTargetType(renderer) {
-  const gl = renderer.getContext();
-
-  // WebGL2 path – most modern Android Chrome with WebGL2 supports this
-  if (typeof WebGL2RenderingContext !== "undefined" && gl instanceof WebGL2RenderingContext) {
-    const ext = gl.getExtension("EXT_color_buffer_float");
-    if (ext) return THREE.FloatType;
-    const extHalf = gl.getExtension("EXT_color_buffer_half_float");
-    if (extHalf) return THREE.HalfFloatType;
-  }
-
-  // WebGL1 path
-  const extHalf = gl.getExtension("OES_texture_half_float");
-  const extHalfLinear = gl.getExtension("OES_texture_half_float_linear");
-  if (extHalf && extHalfLinear) return THREE.HalfFloatType;
-
-  const extFloat = gl.getExtension("OES_texture_float");
-  const extFloatLinear = gl.getExtension("OES_texture_float_linear");
-  if (extFloat && extFloatLinear) return THREE.FloatType;
-
-  // Android fallback: 8-bit unsigned – bloom will be dimmer but still rendered
-  return THREE.UnsignedByteType;
 }
 
 export const GlowingTubeAnimation = () => {
@@ -79,11 +49,12 @@ export const GlowingTubeAnimation = () => {
     const container = mountRef.current;
     if (!container) return;
 
-    let W = window.innerWidth;
-    let H = window.innerHeight;
+    // Use container dimensions, not window — correct when component isn't full-screen
+    let W = container.clientWidth  || window.innerWidth;
+    let H = container.clientHeight || window.innerHeight;
 
     const onAndroid = isAndroid();
-    const isMobile = W < 768;
+    const isMobile  = W < 768;
 
     // ─── Scene & Camera ──────────────────────────────────────────────────────
     const scene = new THREE.Scene();
@@ -94,74 +65,99 @@ export const GlowingTubeAnimation = () => {
 
     // ─── Renderer ────────────────────────────────────────────────────────────
     const renderer = new THREE.WebGLRenderer({
-      antialias: isMobile ? false : true,
+      antialias: !isMobile,
       alpha: false,
       powerPreference: "high-performance",
-      // "mediump" helps Android drivers avoid silent precision fallbacks
       precision: onAndroid ? "mediump" : "highp",
     });
-
-    // Cap pixel ratio: Android GPUs easily bottleneck at 3x DPR
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, onAndroid ? 1.0 : isMobile ? 1.5 : 2));
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, onAndroid ? 1.0 : isMobile ? 1.5 : 2)
+    );
     renderer.setSize(W, H);
     renderer.toneMapping = THREE.ReinhardToneMapping;
-    renderer.toneMappingExposure = onAndroid ? 1.8 : 1.2; // Brighter exposure on Android
+    renderer.toneMappingExposure = 1.2;
     container.appendChild(renderer.domElement);
 
-    // ─── Post-Processing (Bloom) ─────────────────────────────────────────────
-    // KEY FIX: Build render target with correct texture type for this device
-    const rtType = getBestRenderTargetType(renderer);
-    const isLowEndFallback = rtType === THREE.UnsignedByteType;
+    // ─── ANDROID GLOW FIX ────────────────────────────────────────────────────
+    // UnrealBloomPass internally allocates its own half-float render targets.
+    // On Android these silently fail → bloom produces nothing.
+    // Solution: skip WebGL bloom on Android entirely. Instead apply CSS
+    // filter: blur+brightness directly on the <canvas>. This is GPU-composited
+    // by the browser itself and works on 100% of Android devices.
+    if (onAndroid) {
+      const cvs = renderer.domElement;
+      cvs.style.filter     = "blur(5px) brightness(4) saturate(1.6)";
+      cvs.style.transform  = "scale(1.04) translate3d(0,0,0)"; // hide blur edge fringe
+      cvs.style.willChange = "filter, transform";
+    }
 
-    const renderTarget = new THREE.WebGLRenderTarget(W, H, {
-      minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter,
-      format: THREE.RGBAFormat,
-      type: rtType,
-      // Ensure proper color space on Android
-      colorSpace: THREE.LinearSRGBColorSpace ?? THREE.LinearEncoding,
-    });
+    // ─── Post-Processing — desktop & iOS only ────────────────────────────────
+    let composer = null;
 
-    const renderScene = new RenderPass(scene, camera);
+    if (!onAndroid) {
+      const gl = renderer.getContext();
+      let rtType = THREE.UnsignedByteType;
 
-    // On Android with no float support, crank bloom params to compensate
-    const bloomStrength = isLowEndFallback ? 2.2 : PARAMS.bloomStrength;
-    const bloomThreshold = isLowEndFallback ? 0.0 : PARAMS.bloomThreshold;
-    const bloomRadius = isLowEndFallback ? 1.2 : PARAMS.bloomRadius;
+      if (
+        typeof WebGL2RenderingContext !== "undefined" &&
+        gl instanceof WebGL2RenderingContext
+      ) {
+        if (gl.getExtension("EXT_color_buffer_float"))
+          rtType = THREE.FloatType;
+        else if (gl.getExtension("EXT_color_buffer_half_float"))
+          rtType = THREE.HalfFloatType;
+      } else {
+        if (
+          gl.getExtension("OES_texture_half_float") &&
+          gl.getExtension("OES_texture_half_float_linear")
+        )
+          rtType = THREE.HalfFloatType;
+        else if (
+          gl.getExtension("OES_texture_float") &&
+          gl.getExtension("OES_texture_float_linear")
+        )
+          rtType = THREE.FloatType;
+      }
 
-    const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(W, H),
-      bloomStrength,
-      bloomRadius,
-      bloomThreshold
-    );
+      const renderTarget = new THREE.WebGLRenderTarget(W, H, {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBAFormat,
+        type: rtType,
+      });
 
-    const composer = new EffectComposer(renderer, renderTarget);
-    composer.addPass(renderScene);
-    composer.addPass(bloomPass);
+      const bloomPass = new UnrealBloomPass(
+        new THREE.Vector2(W, H),
+        PARAMS.bloomStrength,
+        PARAMS.bloomRadius,
+        PARAMS.bloomThreshold
+      );
+
+      composer = new EffectComposer(renderer, renderTarget);
+      composer.addPass(new RenderPass(scene, camera));
+      composer.addPass(bloomPass);
+    }
 
     // ─── Lights ──────────────────────────────────────────────────────────────
-    const dl1 = new THREE.DirectionalLight(PARAMS.lightColors[0], PARAMS.lightIntensity * 2);
+    const dl1 = new THREE.DirectionalLight(0xffffff, PARAMS.lightIntensity * 2);
     dl1.position.set(1, 1, 1);
     scene.add(dl1);
 
-    const dl2 = new THREE.DirectionalLight(PARAMS.lightColors[1], PARAMS.lightIntensity * 2);
+    const dl2 = new THREE.DirectionalLight(0xffffff, PARAMS.lightIntensity * 2);
     dl2.position.set(-1, -1, 1);
     scene.add(dl2);
 
-    const amLight = new THREE.AmbientLight(0xffffff, PARAMS.lightIntensity * 0.5);
-    scene.add(amLight);
+    scene.add(new THREE.AmbientLight(0xffffff, PARAMS.lightIntensity * 0.5));
 
-    // ─── Tubes Setup ─────────────────────────────────────────────────────────
+    // ─── Tubes & Balls ────────────────────────────────────────────────────────
     const tubes = [];
 
     PARAMS.colors.forEach((hexColor, colorIdx) => {
       for (let i = 0; i < PARAMS.tubesPerColor; i++) {
         const tubeIdx = colorIdx * PARAMS.tubesPerColor + i;
 
-        // On devices without float textures, boost emissive so the material
-        // itself looks bright even if bloom doesn't accumulate properly.
-        const emissiveIntensity = isLowEndFallback ? 1.8 : 0.45;
+        // Android: high emissive so CSS blur has bright source material to bloom
+        const emissiveIntensity = onAndroid ? 2.2 : 0.45;
 
         const material = new THREE.MeshStandardMaterial({
           color: hexColor,
@@ -171,10 +167,10 @@ export const GlowingTubeAnimation = () => {
           roughness: PARAMS.roughness,
         });
 
-        const history = [];
-        for (let j = 0; j < PARAMS.historySize; j++) {
-          history.push(new THREE.Vector3(0, 0, 0));
-        }
+        const history = Array.from(
+          { length: PARAMS.historySize },
+          () => new THREE.Vector3()
+        );
 
         const curve = new THREE.CatmullRomCurve3(history);
         const geometry = new THREE.TubeGeometry(
@@ -188,7 +184,7 @@ export const GlowingTubeAnimation = () => {
         mesh.frustumCulled = false;
         scene.add(mesh);
 
-        // ─── Glowing Balls ──────────────────────────────────────────────────
+        // Glowing balls — sphere and icosahedron alternating (unchanged)
         const balls = [];
         for (let b = 0; b < PARAMS.ballsPerTube; b++) {
           const ballGeo =
@@ -196,16 +192,15 @@ export const GlowingTubeAnimation = () => {
               ? new THREE.SphereGeometry(PARAMS.tubeRadius * 2.5, 12, 12)
               : new THREE.IcosahedronGeometry(PARAMS.tubeRadius * 1.8, 0);
 
-          const ballMaterial = material.clone();
-          // Android: make balls very bright to compensate for bloom loss
-          ballMaterial.emissiveIntensity = isLowEndFallback ? 4.5 : 2.5;
+          const ballMat = material.clone();
+          ballMat.emissiveIntensity = onAndroid ? 5.0 : 2.5;
 
-          const ballMesh = new THREE.Mesh(ballGeo, ballMaterial);
+          const ballMesh = new THREE.Mesh(ballGeo, ballMat);
           ballMesh.frustumCulled = false;
           scene.add(ballMesh);
           balls.push({
             mesh: ballMesh,
-            material: ballMaterial,
+            material: ballMat,
             index: b,
             trailPos: Math.random(),
           });
@@ -215,62 +210,53 @@ export const GlowingTubeAnimation = () => {
           mesh,
           material,
           history,
-          currentPos: new THREE.Vector3(0, 0, 0),
+          currentPos: new THREE.Vector3(),
           index: tubeIdx,
           balls,
         });
       }
     });
 
-    // ─── Mouse / Touch Tracking ───────────────────────────────────────────────
-    const target = new THREE.Vector3(0, 0, 0);
-    const pointer = new THREE.Vector3(0, 0, 0);
-    let isActive = false;
+    // ─── Pointer / Touch Tracking ─────────────────────────────────────────────
+    const target  = new THREE.Vector3();
+    const pointer = new THREE.Vector3();
+    let isActive  = false;
     let sleepTimer = null;
 
     const updatePointer = (e) => {
       isActive = true;
       clearTimeout(sleepTimer);
 
-      const clientX =
-        e.touches && e.touches.length > 0 ? e.touches[0].clientX : e.clientX;
-      const clientY =
-        e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY;
-      if (clientX === undefined || clientY === undefined) return;
+      const clientX = e.touches?.[0]?.clientX ?? e.clientX;
+      const clientY = e.touches?.[0]?.clientY ?? e.clientY;
+      if (clientX == null || clientY == null) return;
 
       const rect = container.getBoundingClientRect();
-      const x = ((clientX - rect.left) / rect.width) * 2 - 1;
-      const y = -((clientY - rect.top) / rect.height) * 2 + 1;
+      const x    = ((clientX - rect.left) / rect.width)  * 2 - 1;
+      const y    = -((clientY - rect.top)  / rect.height) * 2 + 1;
       pointer.set(x, y, 0.5).unproject(camera);
 
-      const dir = pointer.sub(camera.position).normalize();
+      const dir      = pointer.sub(camera.position).normalize();
       const distance = -camera.position.z / dir.z;
       target.copy(camera.position).add(dir.multiplyScalar(distance));
 
-      sleepTimer = setTimeout(() => {
-        isActive = false;
-      }, 2500);
+      sleepTimer = setTimeout(() => { isActive = false; }, 2500);
     };
 
-    // ── Registered once each (orignal code added touch listeners twice) ──────
-    window.addEventListener("mousemove", updatePointer);
+    window.addEventListener("mousemove",   updatePointer);
     window.addEventListener("pointerdown", updatePointer);
     window.addEventListener("pointermove", updatePointer);
-    window.addEventListener("touchmove", updatePointer, { passive: true });
-    window.addEventListener("touchstart", updatePointer, { passive: true });
+    window.addEventListener("touchmove",   updatePointer, { passive: true });
+    window.addEventListener("touchstart",  updatePointer, { passive: true });
 
-    // ─── Resize ──────────────────────────────────────────────────────────────
+    // ─── Resize ───────────────────────────────────────────────────────────────
     const onResize = () => {
-      W = window.innerWidth;
-      H = window.innerHeight;
+      W = container.clientWidth  || window.innerWidth;
+      H = container.clientHeight || window.innerHeight;
       camera.aspect = W / H;
       camera.updateProjectionMatrix();
       renderer.setSize(W, H);
-      composer.setSize(W, H);
-
-      // Resize the render target too – critical on orientation change (Android)
-      renderTarget.setSize(W, H);
-      bloomPass.setSize(new THREE.Vector2(W, H));
+      composer?.setSize(W, H);
     };
     window.addEventListener("resize", onResize);
 
@@ -282,36 +268,43 @@ export const GlowingTubeAnimation = () => {
       animId = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
 
-      const vh =
-        Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) *
-        camera.position.z *
-        2;
-      const vw = vh * (W / H);
+      const vh  = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z * 2;
+      const vw  = vh * (W / H);
       const mobile = W < 768;
 
+      // Sleep-mode lissajous — tighter radii on mobile to stay within the card
       if (!isActive) {
-        const radiusX = vw * (mobile ? 0.28 : 0.35);
-        const radiusY = vh * (mobile ? 0.1 : 0.25);
-        target.x = Math.cos(t * PARAMS.sleepTimeScale1) * radiusX;
-        target.y = Math.sin(t * PARAMS.sleepTimeScale2) * radiusY;
-        target.z = Math.sin(t * 0.5) * (mobile ? 15 : 50);
+        const rX = vw * (mobile ? 0.20 : 0.35);
+        const rY = vh * (mobile ? 0.12 : 0.25);
+        target.x = Math.cos(t * PARAMS.sleepTimeScale1) * rX;
+        target.y = Math.sin(t * PARAMS.sleepTimeScale2) * rY;
+        target.z = Math.sin(t * 0.5) * (mobile ? 10 : 50);
       }
+
+      // Hard bounds — tubes can never exceed 40% of viewport half-width/height
+      const boundX = vw * 0.40;
+      const boundY = vh * 0.40;
+
+      // Scale noise down on mobile so it doesn't push tubes off the narrow screen
+      const noiseScale = mobile ? PARAMS.noise * 0.4 : PARAMS.noise;
 
       const dynamicTubeRadius = mobile
         ? PARAMS.tubeRadius * Math.max(0.4, W / 1024)
         : PARAMS.tubeRadius;
 
       tubes.forEach((tube) => {
-        const noise = pseudoNoise(t, tube.index * 1.5).multiplyScalar(
-          PARAMS.noise
-        );
+        const noise      = pseudoNoise(t, tube.index * 1.5).multiplyScalar(noiseScale);
         const moveTarget = target.clone().add(noise);
         tube.currentPos.lerp(moveTarget, PARAMS.lerp);
+
+        // Clamp so tubes never leave visible card area
+        tube.currentPos.x = THREE.MathUtils.clamp(tube.currentPos.x, -boundX, boundX);
+        tube.currentPos.y = THREE.MathUtils.clamp(tube.currentPos.y, -boundY, boundY);
 
         tube.history.shift();
         tube.history.push(tube.currentPos.clone());
 
-        const curve = new THREE.CatmullRomCurve3(tube.history);
+        const curve  = new THREE.CatmullRomCurve3(tube.history);
         const newGeo = new THREE.TubeGeometry(
           curve,
           PARAMS.tubeSegments,
@@ -323,36 +316,37 @@ export const GlowingTubeAnimation = () => {
         tube.mesh.geometry = newGeo;
 
         tube.balls.forEach((ball, bIdx) => {
-          const historyIdx = Math.floor(
-            ball.trailPos * (tube.history.length - 1)
-          );
-          const basePos = tube.history[historyIdx] || tube.currentPos;
+          const histIdx = Math.floor(ball.trailPos * (tube.history.length - 1));
+          const basePos = tube.history[histIdx] || tube.currentPos;
+          const orbitT  = t * (1.5 + bIdx * 0.4) + tube.index * 0.7;
+          const orbRad  = dynamicTubeRadius * (4 + bIdx * 2);
 
-          const orbitT = t * (1.5 + bIdx * 0.4) + tube.index * 0.7;
-          const radius = dynamicTubeRadius * (4 + bIdx * 2);
-
+          // Clamp ball positions too
           ball.mesh.position.set(
-            basePos.x + Math.sin(orbitT) * radius,
-            basePos.y + Math.cos(orbitT * 0.8) * radius,
-            basePos.z + Math.sin(orbitT * 1.2) * radius
+            THREE.MathUtils.clamp(basePos.x + Math.sin(orbitT)       * orbRad, -boundX, boundX),
+            THREE.MathUtils.clamp(basePos.y + Math.cos(orbitT * 0.8) * orbRad, -boundY, boundY),
+            basePos.z + Math.sin(orbitT * 1.2) * orbRad
           );
 
           const pulse = 1.0 + Math.sin(t * 5 + bIdx) * 0.2;
-          const scaleRatio = (dynamicTubeRadius / PARAMS.tubeRadius) * pulse;
-          ball.mesh.scale.setScalar(scaleRatio);
+          ball.mesh.scale.setScalar((dynamicTubeRadius / PARAMS.tubeRadius) * pulse);
 
-          // Sparkle – on low-end Android, use a higher base so it's always visible
-          const sparkleBase = isLowEndFallback ? 3.5 : 2.0;
-          const sparkleAmp = isLowEndFallback ? 2.0 : 1.5;
-          ball.material.emissiveIntensity =
-            sparkleBase + Math.sin(t * 15 + bIdx) * sparkleAmp;
+          // Sparkle — identical logic, higher base on Android
+          const base = onAndroid ? 4.0 : 2.0;
+          const amp  = onAndroid ? 2.0 : 1.5;
+          ball.material.emissiveIntensity = base + Math.sin(t * 15 + bIdx) * amp;
 
           ball.mesh.rotation.x += 0.03;
           ball.mesh.rotation.y += 0.03;
         });
       });
 
-      composer.render();
+      // Android uses plain renderer; desktop/iOS uses bloom composer
+      if (composer) {
+        composer.render();
+      } else {
+        renderer.render(scene, camera);
+      }
     };
 
     animate();
@@ -360,12 +354,12 @@ export const GlowingTubeAnimation = () => {
     // ─── Cleanup ──────────────────────────────────────────────────────────────
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener("mousemove", updatePointer);
+      window.removeEventListener("mousemove",   updatePointer);
       window.removeEventListener("pointerdown", updatePointer);
       window.removeEventListener("pointermove", updatePointer);
-      window.removeEventListener("touchmove", updatePointer);
-      window.removeEventListener("touchstart", updatePointer);
-      window.removeEventListener("resize", onResize);
+      window.removeEventListener("touchmove",   updatePointer);
+      window.removeEventListener("touchstart",  updatePointer);
+      window.removeEventListener("resize",      onResize);
       clearTimeout(sleepTimer);
 
       tubes.forEach((tube) => {
@@ -377,9 +371,8 @@ export const GlowingTubeAnimation = () => {
         });
       });
 
-      renderTarget.dispose();
+      composer?.dispose();
       renderer.dispose();
-      composer.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
@@ -392,20 +385,18 @@ export const GlowingTubeAnimation = () => {
       id="glowing-tubes-cursor"
       aria-hidden="true"
       style={{
-        position: "sticky",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100vh",
-        pointerEvents: "none",
-        zIndex: 50,
-        mixBlendMode: "difference",
-        overflow: "hidden",
-        filter: "contrast(1.1)",
+        position:                 "sticky",
+        top:                      0,
+        left:                     0,
+        width:                    "100%",
+        height:                   "100vh",
+        pointerEvents:            "none",
+        zIndex:                   50,
+        mixBlendMode:             "difference",
+        overflow:                 "hidden",
         WebkitBackfaceVisibility: "hidden",
-        backfaceVisibility: "hidden",
-        transform: "translate3d(0, 0, 0)",
-        opacity: 1,
+        backfaceVisibility:       "hidden",
+        transform:                "translate3d(0,0,0)",
       }}
     />
   );
