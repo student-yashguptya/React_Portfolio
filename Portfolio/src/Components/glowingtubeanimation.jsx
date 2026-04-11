@@ -20,7 +20,7 @@ const PARAMS = {
   roughness: 0.2,
   lerp: 0.1,
   noise: 28.0,
-  historySize: 100,
+  historySize: 120,
   tubesPerColor: 3,
   ballsPerTube: 10,
   tubeRadius: 1.5,
@@ -272,21 +272,21 @@ export const GlowingTubeAnimation = () => {
       const vw  = vh * (W / H);
       const mobile = W < 768;
 
-      // Sleep-mode lissajous — tighter radii on mobile to stay within the card
+      // Sleep-mode lissajous — adjusted for mobile to stretch length while staying within bounds
       if (!isActive) {
-        const rX = vw * (mobile ? 0.20 : 0.35);
-        const rY = vh * (mobile ? 0.12 : 0.25);
+        const rX = vw * (mobile ? 0.32 : 0.35); // Increased from 0.20
+        const rY = vh * (mobile ? 0.18 : 0.25); // Increased from 0.12
         target.x = Math.cos(t * PARAMS.sleepTimeScale1) * rX;
         target.y = Math.sin(t * PARAMS.sleepTimeScale2) * rY;
-        target.z = Math.sin(t * 0.5) * (mobile ? 10 : 50);
+        target.z = Math.sin(t * 0.5) * (mobile ? 20 : 50);
       }
 
-      // Hard bounds — tubes can never exceed 40% of viewport half-width/height
-      const boundX = vw * 0.40;
-      const boundY = vh * 0.40;
+      // Hard bounds — tubes can never exceed a percentage of viewport area
+      const boundX = vw * (mobile ? 0.48 : 0.40); // Slightly wider bounds for mobile
+      const boundY = vh * (mobile ? 0.45 : 0.40);
 
-      // Scale noise down on mobile so it doesn't push tubes off the narrow screen
-      const noiseScale = mobile ? PARAMS.noise * 0.4 : PARAMS.noise;
+      // Scale noise — increased for mobile so tubes stretch out more (look longer)
+      const noiseScale = mobile ? PARAMS.noise * 0.8 : PARAMS.noise; // Increased from 0.4
 
       const dynamicTubeRadius = mobile
         ? PARAMS.tubeRadius * Math.max(0.4, W / 1024)
