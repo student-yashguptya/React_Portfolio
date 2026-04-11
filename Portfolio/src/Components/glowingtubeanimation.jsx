@@ -16,14 +16,16 @@ function pseudoNoise(t, i) {
 // ─── Configuration ────────────────────────────────────────────────────────────
 const PARAMS = {
   bloomThreshold: 0.1,
-  bloomStrength: 1.2,
+  bloomStrength: 1.0,  // Reduced from 1.2
   bloomRadius: 0.8,
   metalness: 0.9,
   roughness: 0.2,
   lerp: 0.1,         // How fast tubes follow
-  noise: 25.0,       // Noise scale displacement
-  historySize: 50,   // Length of the tail
-  tubeRadius: 1.8,
+  noise: 28.0,       // Slightly increased spread
+  historySize: 100,   // Increased from 50 for longer tubes
+  tubesPerColor: 2,  // 3 tubes for each color
+  ballsPerTube: 5,  // Increased further to cover the entire length
+  tubeRadius: 1.5,   // Thinned slightly for density
   tubeSegments: 64,
   tubeRadSegments: 6,
   colors: [
@@ -58,14 +60,21 @@ export const GlowingTubeAnimation = () => {
     const camera = new THREE.PerspectiveCamera(55, W / H, 1, 2000);
     camera.position.set(0, 0, 600);
 
+    const isMobile = W < 768;
+
     // ─── Renderer ──────────────────────────────────────────────────────────────
     const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: false, // Must be false for UnrealBloomPass to composite correctly
+      antialias: isMobile ? false : true, // Disable antialias on mobile for performance/glow stability
+      alpha: false,
       powerPreference: "high-performance"
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2)); // Cap mobile resolution for GPU stability
     renderer.setSize(W, H);
+    
+    // Tone mapping helps bloom consistency across devices
+    renderer.toneMapping = THREE.ReinhardToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    
     container.appendChild(renderer.domElement);
 
     // ─── Post-Processing (Bloom) ───────────────────────────────────────────────
@@ -96,39 +105,66 @@ export const GlowingTubeAnimation = () => {
     // ─── Tubes Setup ───────────────────────────────────────────────────────────
     const tubes = [];
     
-    PARAMS.colors.forEach((hexColor, index) => {
-      // Physical material matching the "Metalness / Roughness" requirement
-      const material = new THREE.MeshStandardMaterial({
-        color: hexColor,
-        emissive: hexColor,
-        emissiveIntensity: 0.8, // makes it glow brightly into the bloom pass
-        metalness: PARAMS.metalness,
-        roughness: PARAMS.roughness,
-      });
+    PARAMS.colors.forEach((hexColor, colorIdx) => {
+      for (let i = 0; i < PARAMS.tubesPerColor; i++) {
+        const tubeIdx = colorIdx * PARAMS.tubesPerColor + i;
+        
+        // Physical material matching the "Metalness / Roughness" requirement
+        const material = new THREE.MeshStandardMaterial({
+          color: hexColor,
+          emissive: hexColor,
+          emissiveIntensity: 0.45, // Reduced from 0.8 for a softer look
+          metalness: PARAMS.metalness,
+          roughness: PARAMS.roughness,
+        });
 
-      // Initial history is just points at the center
-      const history = [];
-      for (let i = 0; i < PARAMS.historySize; i++) {
-        history.push(new THREE.Vector3(0, 0, 0));
+        // Initial history is just points at the center
+        const history = [];
+        for (let j = 0; j < PARAMS.historySize; j++) {
+          history.push(new THREE.Vector3(0, 0, 0));
+        }
+
+        // Initial curve
+        const curve = new THREE.CatmullRomCurve3(history);
+        const geometry = new THREE.TubeGeometry(curve, PARAMS.tubeSegments, PARAMS.tubeRadius, PARAMS.tubeRadSegments, false);
+        const mesh = new THREE.Mesh(geometry, material);
+        
+        // Prevent frustum culling from glitching as bounding spheres move rapidly
+        mesh.frustumCulled = false; 
+
+        scene.add(mesh);
+
+        // ─── Glowing Balls Setup ──────────────────────────────────────────────
+        const balls = [];
+        for (let b = 0; b < PARAMS.ballsPerTube; b++) {
+          const ballGeo = (i + b) % 2 === 0 
+            ? new THREE.SphereGeometry(PARAMS.tubeRadius * 2.5, 12, 12)
+            : new THREE.IcosahedronGeometry(PARAMS.tubeRadius * 1.8, 0); // Geometric shapes sparkle better
+          
+          // Clone material so each ball can "sparkle" independently
+          const ballMaterial = material.clone();
+          ballMaterial.emissiveIntensity = 2.5; // High base brightness for bloom
+          
+          const ballMesh = new THREE.Mesh(ballGeo, ballMaterial);
+          ballMesh.frustumCulled = false;
+          scene.add(ballMesh);
+          balls.push({
+            mesh: ballMesh,
+            material: ballMaterial,
+            index: b,
+            trailPos: Math.random() // Distribute along the trail
+          });
+        }
+
+        tubes.push({
+          mesh,
+          material,
+          history,
+          currentPos: new THREE.Vector3(0, 0, 0),
+          index: tubeIdx,
+          balls
+        });
       }
-
-      // Initial curve
-      const curve = new THREE.CatmullRomCurve3(history);
-      const geometry = new THREE.TubeGeometry(curve, PARAMS.tubeSegments, PARAMS.tubeRadius, PARAMS.tubeRadSegments, false);
-      const mesh = new THREE.Mesh(geometry, material);
-      
-      // Prevent frustum culling from glitching as bounding spheres move rapidly
-      mesh.frustumCulled = false; 
-
-      scene.add(mesh);
-
-      tubes.push({
-        mesh,
-        material,
-        history,
-        currentPos: new THREE.Vector3(0, 0, 0),
-        index
-      });
     });
 
     // ─── Mouse Tracking & Sleep State ──────────────────────────────────────────
@@ -195,12 +231,13 @@ export const GlowingTubeAnimation = () => {
 
       // Map Sleep Mode Infinity Curve
       if (!isActive) {
-        const radiusX = vw * (isMobile ? 0.45 : 0.35); // Expand width usage on mobile 
-        const radiusY = vh * (isMobile ? 0.15 : 0.25); // Condense height on mobile
+        // Tightened mobile radii to keep animation centered within cards
+        const radiusX = vw * (isMobile ? 0.32 : 0.35); 
+        const radiusY = vh * (isMobile ? 0.12 : 0.25); 
         
         target.x = Math.cos(t * PARAMS.sleepTimeScale1) * radiusX;
         target.y = Math.sin(t * PARAMS.sleepTimeScale2) * radiusY;
-        target.z = Math.sin(t * 0.5) * 50; // Give it a gentle depth weave
+        target.z = Math.sin(t * 0.5) * (isMobile ? 20 : 50); // Reduced depth variance on mobile
       }
 
       // Dynamic physical radius so it looks identically elegant on desktop and mobile
@@ -212,7 +249,8 @@ export const GlowingTubeAnimation = () => {
       // Update Tubes
       tubes.forEach((tube) => {
         // Individual noise calculation gives each strand a separate organic wiggle
-        const noise = pseudoNoise(t, tube.index).multiplyScalar(PARAMS.noise);
+        // We add a slight offset per tube index within color group for better separation
+        const noise = pseudoNoise(t, tube.index * 1.5).multiplyScalar(PARAMS.noise);
         
         // Desired target + noise offset
         const moveTarget = target.clone().add(noise);
@@ -230,6 +268,33 @@ export const GlowingTubeAnimation = () => {
         
         tube.mesh.geometry.dispose();
         tube.mesh.geometry = newGeo;
+
+        // Update Balls spread along the tube trail
+        tube.balls.forEach((ball, bIdx) => {
+          // Identify which point in history to follow based on trailPos
+          const historyIdx = Math.floor(ball.trailPos * (tube.history.length - 1));
+          const basePos = tube.history[historyIdx] || tube.currentPos;
+
+          const orbitT = t * (1.5 + bIdx * 0.4) + (tube.index * 0.7);
+          const radius = dynamicTubeRadius * (4 + bIdx * 2); // Orbit the trail
+          
+          ball.mesh.position.set(
+            basePos.x + Math.sin(orbitT) * radius,
+            basePos.y + Math.cos(orbitT * 0.8) * radius,
+            basePos.z + Math.sin(orbitT * 1.2) * radius
+          );
+          
+          // Match ball scale to dynamic tube thickness & add a pulse
+          const pulse = 1.0 + Math.sin(t * 5 + bIdx) * 0.2;
+          const scaleRatio = (dynamicTubeRadius / PARAMS.tubeRadius) * pulse;
+          ball.mesh.scale.setScalar(scaleRatio);
+
+          // Sparkle Effect
+          ball.material.emissiveIntensity = 2.0 + Math.sin(t * 15 + bIdx) * 1.5;
+
+          ball.mesh.rotation.x += 0.03;
+          ball.mesh.rotation.y += 0.03;
+        });
       });
 
       // Render via Composer
@@ -252,6 +317,10 @@ export const GlowingTubeAnimation = () => {
       tubes.forEach((tube) => {
         tube.mesh.geometry.dispose();
         tube.material.dispose();
+        tube.balls.forEach(ball => {
+          ball.mesh.geometry.dispose();
+          ball.material.dispose();
+        });
       });
       
       renderer.dispose();
@@ -277,6 +346,10 @@ export const GlowingTubeAnimation = () => {
         zIndex: 50,
         mixBlendMode: "difference", // Using difference guarantees automatic text contrast adaptation
         overflow: "hidden",
+        filter: "contrast(1.1)", // Slight contrast boost for mobile glow visibility
+        WebkitBackfaceVisibility: "hidden", // Performance optimizations for mobile browsers
+        backfaceVisibility: "hidden",
+        transform: "translate3d(0, 0, 0)",
       }}
     />
   );
