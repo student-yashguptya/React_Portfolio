@@ -21,9 +21,8 @@ const educationItems = [
 
 const subjects = [
   "Data Structure",
-  "Database Management System",
-  "Computer Networks",
   "Software Engineering",
+  "AI & ML",
 ];
 
 export const EducationSection = () => {

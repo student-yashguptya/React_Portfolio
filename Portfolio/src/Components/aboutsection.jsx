@@ -102,7 +102,7 @@ export const AboutSection = () => {
                   Start a Chat
                 </motion.a>
                 <motion.a
-                  href="/Documents/Resume.pdf"
+                  href="/Documents/Yash_Gupta_Resume.pdf"
                   target="_blank"
                   rel="noreferrer"
                   className="btn-shimmer btn-shimmer-light btn-premium btn-premium-outline inline-flex liquid-glass border border-white/20 px-8 py-3.5 text-sm font-medium text-white text-center"

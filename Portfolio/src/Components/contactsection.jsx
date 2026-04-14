@@ -23,12 +23,12 @@ const contactItems = [
     value: "+91 9520102418",
     href: "tel:+919520102418",
   },
-  {
-    icon: MapPin,
-    label: "Location",
-    value: "A-138 Suresh Sharma Nagar Pilibhit Bypass road, Bareilly",
-    href: null,
-  },
+  // {
+  //   icon: MapPin,
+  //   label: "Location",
+  //   value: "A-138 Suresh Sharma Nagar Pilibhit Bypass road, Bareilly",
+  //   href: null,
+  // },
 ];
 
 const socials = [
